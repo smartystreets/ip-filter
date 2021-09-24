@@ -73,18 +73,18 @@ func (this *treeNode) Insert(IPAddress string) error{
 	IPFragment = IPAddress[:strings.Index(IPAddress, ".")] //grab the next fragment up until the next "." --> 111
 
 	if len(IPAddress) > 0{ //if we have nothing else to add we need to return nil
-		this.AddChild(IPFragment)
+		this.AddChild(IPFragment, IPAddress)
 	}
 
 	return nil
 }
 
-func(this *treeNode) AddChild(IPFragment string) error{
+func(this *treeNode) AddChild(IPFragment string, IPAddress string) error{
 
 	// IPFragment --> 111
 	for _, children := range this.children { //loop through all the children already attached to 210
 		if children.value == IPFragment {
-			return children.Insert(IPFragment) // if 210 has a child that is equal to 111 then skip this one and call insert to add the rest of the sections to that child
+			return children.Insert(IPAddress) // if 210 has a child that is equal to 111 then skip this one and call insert to add the rest of the sections to that child
 		}
 	}
 
@@ -134,4 +134,28 @@ func (this *treeNode) Delete(IPAddress string) {}
 /*
 Will search the tree for a specific IPAddress within our nodes
 */
-func (this *treeNode) Search(IPAddress string) {}
+func (this *treeNode) Search(IPAddress string) bool {
+	// 210.111.12.12
+	if len(IPAddress) == 0 {
+		return false
+	}
+
+	// check for a network
+	//maybe check the positions [len(IPAddress)-2] [len(IPAddress)-3] == "/"
+	if IPAddress[(len(IPAddress) - 2): (len(IPAddress) - 1)] == "/" {
+		//this is network with 8, search the top level nodes
+	}
+	if IPAddress[(len(IPAddress) - 3): (len(IPAddress) - 2)] == "/"  {
+		if IPAddress[(len(IPAddress) - 2):] == "16"{
+			//this is a network with 16, search the top level nodes
+		}
+		if IPAddress[(len(IPAddress) - 2):] == "24"{
+			//this is a network with 24, search the top level nodes
+		}
+	}
+
+	//if there is no network provided then search node by node...
+	//need to find a way to get the first node (get everything up until the "."
+	
+	return false
+}
