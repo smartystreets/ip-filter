@@ -12,7 +12,6 @@ type treeNode struct {
 	children []treeNode // The potential children of a node
 }
 
-//210.111.12.12/8
 /*
 Becomes:        Network:
 210 <- head     210
@@ -26,12 +25,16 @@ Becomes:        Network:
 Will take in an IP Address as a string and will insert it into the tree accordingly
 */
 func (this *treeNode) Insert(IPAddress string) error{
+	//we may not need this. I need to walk through to confirm
+	if len(IPAddress) == 0 {
+		return nil
+	}
+
 	//Check to see if there is a slash
-	//if there is a slash then we will call the validate/add until we are done.
 	if position := strings.Index(IPAddress, "/"); position != -1 {
 		//We may want to do this a little differently, but for now this is what it looks like.
-		subBits, _ := strconv.Atoi(IPAddress[position:])
-		if subBits == 8 {
+		subnetBits, _ := strconv.Atoi(IPAddress[position:])
+		if subnetBits == 8 {
 			//Then the head of the node is 8 bits long (the first few numbers)
 			this.network = true
 			this.value = IPAddress[:strings.Index(IPAddress,".")]
@@ -55,11 +58,6 @@ func (this *treeNode) Insert(IPAddress string) error{
 			this.children = nil
 			return nil
 		}
-	}
-
-	//maybe a function like this to check if the ip address has been all added
-	if len(IPAddress) == 0 {
-		return nil
 	}
 
 	//We want to set the values in the case that it does NOT have "/"
@@ -141,9 +139,13 @@ func (this *treeNode) Search(IPAddress string) bool {
 	}
 
 	// check for a network
-	//maybe check the positions [len(IPAddress)-2] [len(IPAddress)-3] == "/"
 	if IPAddress[(len(IPAddress) - 2): (len(IPAddress) - 1)] == "/" {
 		//this is network with 8, search the top level nodes
+		for i := range IPAddress {
+			if IPAddress[i] == "." {
+
+			}
+		}
 	}
 	if IPAddress[(len(IPAddress) - 3): (len(IPAddress) - 2)] == "/"  {
 		if IPAddress[(len(IPAddress) - 2):] == "16"{
@@ -156,6 +158,10 @@ func (this *treeNode) Search(IPAddress string) bool {
 
 	//if there is no network provided then search node by node...
 	//need to find a way to get the first node (get everything up until the "."
-	
+
+	//maybe loop through the string IP? yikes and find the "."
+
 	return false
 }
+
+//helper function to find all the indexes
