@@ -19,8 +19,6 @@ Becomes:        Network:
 111 <- child    111
 12  <- child    No children
 12  <- child
-
-Collapse on the net host
 */
 
 //Insert
@@ -35,8 +33,6 @@ func (this *treeNode) Insert(IPAddress string) error{
 		subBits, _ := strconv.Atoi(IPAddress[position:])
 		if subBits == 8 {
 			//Then the head of the node is 8 bits long (the first few numbers)
-			//everything up to the first dot can be a node
-
 			this.network = true
 			this.value = IPAddress[:strings.Index(IPAddress,".")]
 			this.children = nil
@@ -45,9 +41,9 @@ func (this *treeNode) Insert(IPAddress string) error{
 		}
 		if position == 16 {
 			//everything up to the second dot can be a node
-			index := findIndex(IPAddress, 16)
+			index := findIndex(IPAddress, 16) //5
 			this.network = true
-			this.value = IPAddress[:index]
+			this.value = IPAddress[:index] //this current returns 210.111  --> without the second dot
 			this.children = nil
 			return nil
 		}
@@ -55,7 +51,7 @@ func (this *treeNode) Insert(IPAddress string) error{
 			//everything up to the third dot can be a node
 			index := findIndex(IPAddress, 24)
 			this.network = true
-			this.value = IPAddress[:index]
+			this.value = IPAddress[:index] //this current returns 210.111  --> without the second dot
 			this.children = nil
 			return nil
 		}
@@ -66,34 +62,41 @@ func (this *treeNode) Insert(IPAddress string) error{
 		return nil
 	}
 
-	//210.111.12.12/8
-
-	//We want to add each child up until the the dot
+	//We want to set the values in the case that it does NOT have "/"
 	IPFragment := IPAddress[:strings.Index(IPAddress, ".")]
 	this.value = IPFragment
 	this.network = false
 
 	//reduce the IPAddress to grab the next section to add?
-	IPAddress = IPAddress[strings.Index(IPAddress, "."):]
+	IPAddress = IPAddress[(strings.Index(IPAddress, ".") + 1):] //+1 would get 111.12.12 instead of .111.12.12 I think
 
-	//if it does exist then move on to the next child -- assuming at this point it does not.
-	//check to see if it already exits...
-	//We need to create a parsing function for this
-	this.validateNode(IPAddress)
+	IPFragment = IPAddress[:strings.Index(IPAddress, ".")] //grab the next fragment up until the next "." --> 111
 
-	//we need to add this next section as a child node to this node
-
-	//check the length of the IPAddress to return the added Address when it is done
-	if len(IPAddress) == 0 {
-		return nil
+	if len(IPAddress) > 0{ //if we have nothing else to add we need to return nil
+		this.AddChild(IPFragment)
 	}
 
-	this.Insert(IPAddress)
+	return nil
+}
 
+func(this *treeNode) AddChild(IPFragment string) error{
+
+	// IPFragment --> 111
+	for _, children := range this.children { //loop through all the children already attached to 210
+		if children.value == IPFragment {
+			return children.Insert(IPFragment) // if 210 has a child that is equal to 111 then skip this one and call insert to add the rest of the sections to that child
+		}
+	}
+
+	Child := &treeNode{ //if the child did not exist already, create another treeNode
+		value:    IPFragment,
+		network:  false,
+		children: nil,
+	}
+
+	this.children = append(this.children, *Child) //append the node to the parent
 
 	return nil
-	//Start by seeing if the head is already in the this, if it is not, then we keep moving.
-	//Finally if there is no slash continue to add the node through the this.
 }
 
 func findIndex(IPAddress string, position int) int{
