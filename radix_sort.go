@@ -132,28 +132,47 @@ func (this *treeNode) Delete(IPAddress string) {}
 /*
 Will search the tree for a specific IPAddress within our nodes
 */
+//We will not be given a "/"
 func (this *treeNode) Search(IPAddress string) bool {
 	// 210.111.12.12
+
 	if len(IPAddress) == 0 {
 		return false
 	}
 
-	// check for a network
-	if IPAddress[(len(IPAddress) - 2): (len(IPAddress) - 1)] == "/" {
-		//this is network with 8, search the top level nodes
-		for i := range IPAddress {
-			if IPAddress[i] == "." {
+	//var dotIndexes []int // to hold all the nodes we are looking for?
+	//TODO: Get rid of the nested for loop
+	var fragment string
+	for i, _ := range IPAddress { // range through every single letter... Yep this is just an idea
+		if IPAddress[i] == '.' { // once we find a "." we will do some stuff
+			fragment = IPAddress[:i] // grab the fragment leading up to the "." --> this will be our node!
 
+			//now we need to go look to see if that node exists?
+			//except how do we make sure we are starting with the very very top of our tree? If we are on the top then we look for the matching
+
+			for _, child := range this.children{
+				if child.value != fragment { //It will keep looping as the value does not match the fragment
+					continue
+				}
+				//So we found a match at this.child ... is this child a network? //Houston we have a problem, some of our networks are longer than one dot... this only works for the networks that are /8
+				if child.network == true {
+					return true // if the node is a /8 network then we return true e basta così
+				}
+
+				//add the fragment we just looked at and the next to check the next node
+				
+				//one option is to use the following function, but we would have to take it out of the current for loop
+
+				//once it finds a match!
+				remainingAddress := IPAddress[len(fragment)+1:] // reduce the IPAddress 111.12.12
+
+				if true == this.Search(remainingAddress) {
+					return true
+				}
+				break
 			}
 		}
-	}
-	if IPAddress[(len(IPAddress) - 3): (len(IPAddress) - 2)] == "/"  {
-		if IPAddress[(len(IPAddress) - 2):] == "16"{
-			//this is a network with 16, search the top level nodes
-		}
-		if IPAddress[(len(IPAddress) - 2):] == "24"{
-			//this is a network with 24, search the top level nodes
-		}
+
 	}
 
 	//if there is no network provided then search node by node...
@@ -165,3 +184,12 @@ func (this *treeNode) Search(IPAddress string) bool {
 }
 
 //helper function to find all the indexes
+func findIndexes(IPAddress string) []int {
+	var indexes []int
+	for i, _ := range IPAddress {
+		if IPAddress[i] == '.' { // once we find a "." we will add that index to the slice of indexes
+			indexes = append(indexes, i)
+		}
+	}
+	return indexes
+}
