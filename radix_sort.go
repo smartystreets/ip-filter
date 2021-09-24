@@ -57,9 +57,18 @@ func (this *treeNode) Insert(IPAddress string) error {
 			this.children = nil
 			return nil
 		}
+		if position == 32 { // "/32" means that it has one address
+			//everything up to the third dot can be a node
+			index := findIndex(IPAddress, 32)
+			this.network = true
+			this.value = IPAddress[:index] //this current returns 210.111  --> without the second dot
+			this.children = nil
+			return nil
+		}
 	}
 
 	//We want to set the values in the case that it does NOT have "/"
+	// Or do we want to avoid setting "this" specific values so that we can leave the top node empty?
 	IPFragment := IPAddress[:strings.Index(IPAddress, ".")]
 	//this.value = IPFragment
 	//this.network = false
@@ -106,6 +115,9 @@ func findIndex(IPAddress string, position int) int {
 			return i
 		}
 		if count == 3 && position == 24 {
+			return i
+		}
+		if count == 3 && position == 32 {
 			return i
 		}
 	}
