@@ -7,23 +7,17 @@ import (
 
 
 type treeNode struct {
-	//Do we need to keep the value of the potential head? < why would we need this? what benefit would we have with this?
 	value    string     // Partial portion of IPAddress, the value of the node
 	network  bool       // This is what tells us if it is a network or not
 	children []treeNode // The potential children of a node
 }
 
-//Check to see if there is a /8 (whatever)
-/*
-If the slash exists, get the network house and then collapse it.
-If the slash does not exist, go by .
-*/
 //210.111.12.12/8
 /*
-Becomes:
-210 <- head
-111 <- child
-12  <- child
+Becomes:        Network:
+210 <- head     210
+111 <- child    111
+12  <- child    No children
 12  <- child
 
 Collapse on the net host
@@ -66,6 +60,37 @@ func (this *treeNode) Insert(IPAddress string) error{
 			return nil
 		}
 	}
+
+	//maybe a function like this to check if the ip address has been all added
+	if len(IPAddress) == 0 {
+		return nil
+	}
+
+	//210.111.12.12/8
+
+	//We want to add each child up until the the dot
+	IPFragment := IPAddress[:strings.Index(IPAddress, ".")]
+	this.value = IPFragment
+	this.network = false
+
+	//reduce the IPAddress to grab the next section to add?
+	IPAddress = IPAddress[strings.Index(IPAddress, "."):]
+
+	//if it does exist then move on to the next child -- assuming at this point it does not.
+	//check to see if it already exits...
+	//We need to create a parsing function for this
+	this.validateNode(IPAddress)
+
+	//we need to add this next section as a child node to this node
+
+	//check the length of the IPAddress to return the added Address when it is done
+	if len(IPAddress) == 0 {
+		return nil
+	}
+
+	this.Insert(IPAddress)
+
+
 	return nil
 	//Start by seeing if the head is already in the this, if it is not, then we keep moving.
 	//Finally if there is no slash continue to add the node through the this.
