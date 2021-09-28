@@ -68,12 +68,12 @@ func (this *treeNode) Insert(IPAddress string) error {
 			this.addChildNetwork(IPFragment)
 			return nil
 		}
+		IPAddress = IPAddress[:position]
 	}
-	IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
+
 	if len(IPAddress) > 0 {
-		this.addChildNoNetwork(IPFragment, IPAddress)
+		this.addChildNoNetwork(IPAddress)
 	}
-	IPAddress = IPAddress[(strings.Index(IPAddress, ".") + 1):]
 
 	return nil
 }
@@ -94,10 +94,11 @@ func (this *treeNode) addChildNetwork(IPFragment string) error {
 
 	return nil
 }
-func (this *treeNode) addChildNoNetwork(IPFragment, IPAddress string) error {
+func (this *treeNode) addChildNoNetwork(IPAddress string) error {
+	IPFragment := IPAddress[:strings.Index(IPAddress, ".")]
 	for _, children := range this.children { //loop through all the children already attached to 210
 		if children.value == IPFragment {
-			return children.Insert(IPAddress) // if 210 has a child that is equal to 111 then skip this one and call insert to add the rest of the sections to that child
+			return children.addChildNoNetwork(IPAddress) // if 210 has a child that is equal to 111 then skip this one and call insert to add the rest of the sections to that child
 		}
 	}
 
@@ -107,6 +108,12 @@ func (this *treeNode) addChildNoNetwork(IPFragment, IPAddress string) error {
 		children: nil,
 	}
 	this.children = append(this.children, *Child)
+
+	IPAddress = IPAddress[(strings.Index(IPAddress, ".") + 1):]
+
+	if (len(IPAddress) - 1)  != 0 {
+		return Child.addChildNoNetwork(IPAddress)
+	}
 
 	return nil
 }

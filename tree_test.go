@@ -42,6 +42,18 @@ func TestNetworks(t *testing.T) {
 	Assert(t).That(len(tree.children)).Equals(4)
 }
 
+func TestNonNetworks(t *testing.T) {
+	tree := NewTreeNode() //Creates the blank tree
+	Assert(t).That(len(tree.children)).Equals(0)
+
+	tree.Insert("3.144.0.0/13")
+	Assert(t).That(tree.children[0]).Equals(treeNode{
+		value:    "3",
+		network:  false,
+		children: nil,
+	})
+	Assert(t).That(len(tree.children)).Equals(1)
+}
 const (
 	IPNetwork8  = "10.0.0.0/8"
 	IPNetwork16 = "54.168.0.0/16"
