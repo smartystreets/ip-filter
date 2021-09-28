@@ -35,7 +35,7 @@ func (this *treeNode) Insert(IPAddress string) error {
 		//We may want to do this a little differently, but for now this is what it looks like.
 		subnetBits, _ := strconv.Atoi(IPAddress[position:])
 		if subnetBits == 8 {
-			IPFragment := IPAddress[:strings.Index(IPAddress, ".")]
+			IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
 			this.addChildNetwork(IPFragment)
 			return nil
 		}
@@ -164,31 +164,31 @@ func (this *treeNode) Search(IPAddress string) bool {
 	// 210.111.12.12
 
 	if len(IPAddress) == 0 {
-		return false
+		return false //TODO: Error?
 	}
 
 	indexes := findIndexes(IPAddress) //now I know where all the "." are...
 
-	if this.networkCheck(IPAddress, indexes) {
-		return true
-	}
-
 	//so if we get here we did not find a matching network node and will have to just check through the rest of the nodes
 	for i, child := range this.children {
-
-		//check to make sure the child isn't a network we are comparing? Reduce the amount of nodes to check?
-		if child.network == false{
-			fragment := IPAddress[:indexes[i]]
-			if child.value != fragment { //It will keep looping as the value does not match the fragment
-				continue
-			}
-			//The fragment does match -- let's reduce the exiting Address to check the next fragment
-			remainingAddress := IPAddress[len(fragment)+1:] // reduce the IPAddress 111.12.12
-
-			//Recursively call the search function for the next child?
-			if true == this.Search(remainingAddress) {
+		
+		if child.network == true {
+			if this.searchNetworkChild(IPAddress, indexes) {
 				return true
 			}
+		}
+
+		//check to make sure the child isn't a network we are comparing? Reduce the amount of nodes to check?
+		fragment := IPAddress[:indexes[i]]
+		if child.value != fragment { //It will keep looping as the value does not match the fragment
+			continue
+		}
+		//The fragment does match -- let's reduce the exiting Address to check the next fragment
+		remainingAddress := IPAddress[len(fragment)+1:] // reduce the IPAddress 111.12.12
+
+		//Recursively call the search function for the next child?
+		if true == this.Search(remainingAddress) {
+			return true
 		}
 	}
 
@@ -206,7 +206,7 @@ func findIndexes(IPAddress string) []int {
 	return indexes
 }
 
-func (this *treeNode) networkCheck(IPAddress string, Indexes []int) bool {
+func (this *treeNode) searchNetworkChild(IPAddress string, Indexes []int) bool {
 	var fragment string
 
 	//maybe we should hard code this?
