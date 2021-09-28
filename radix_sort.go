@@ -26,66 +26,83 @@ Will take in an IP Address as a string and will insert it into the tree accordin
 func (this *treeNode) Insert(IPAddress string) error {
 	//we may not need this. I need to walk through to confirm
 	if len(IPAddress) == 0 {
-		return nil
+		return ErrInvalidIPAddress
 	}
 
+	var IPFragment string
 	//Check to see if there is a slash
 	if position := strings.Index(IPAddress, "/"); position != -1 {
 		//We may want to do this a little differently, but for now this is what it looks like.
 		subnetBits, _ := strconv.Atoi(IPAddress[position:])
 		if subnetBits == 8 {
-			//Then the head of the node is 8 bits long (the first few numbers)
-			this.network = true
-			this.value = IPAddress[:strings.Index(IPAddress, ".")]
-			this.children = nil
-			//TODO: We need to return the node here - no children after this
+			IPFragment := IPAddress[:strings.Index(IPAddress, ".")]
+			this.addChildNetwork(IPFragment)
 			return nil
 		}
 		if position == 16 {
-			//everything up to the second dot can be a node
 			index := findIndex(IPAddress, 16) //5
-			this.network = true
-			this.value = IPAddress[:index] //this current returns 210.111  --> without the second dot
-			this.children = nil
+			if index == -1 {
+				return ErrInvalidIndex
+			}
+			IPFragment = IPAddress[:index] //this current returns 210.111  --> without the second dot
+			this.addChildNetwork(IPFragment)
 			return nil
 		}
 		if position == 24 {
 			//everything up to the third dot can be a node
 			index := findIndex(IPAddress, 24)
-			this.network = true
-			this.value = IPAddress[:index] //this current returns 210.111  --> without the second dot
-			this.children = nil
+			if index == -1 {
+				return ErrInvalidIndex
+			}
+			IPFragment = IPAddress[:index] //this current returns 210.111  --> without the second dot
+			this.addChildNetwork(IPFragment)
 			return nil
 		}
 		if position == 32 { // "/32" means that it has one address
-			//everything up to the third dot can be a node
 			index := findIndex(IPAddress, 32)
-			this.network = true
-			this.value = IPAddress[:index] //this current returns 210.111  --> without the second dot
-			this.children = nil
+			if index == -1 {
+				return ErrInvalidIndex
+			}
+			IPFragment = IPAddress[:index] //this current returns 210.111  --> without the second dot
+			this.addChildNetwork(IPFragment)
 			return nil
 		}
 	}
 
 	//We want to set the values in the case that it does NOT have "/"
 	// Or do we want to avoid setting "this" specific values so that we can leave the top node empty?
-	IPFragment := IPAddress[:strings.Index(IPAddress, ".")]
+	IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
 	//this.value = IPFragment
 	//this.network = false
-
+	if len(IPAddress) > 0 { //if we have nothing else to add we need to return nil
+		this.addChildNoNetwork(IPFragment, IPAddress)
+	}
 	//reduce the IPAddress to grab the next section to add?
 	IPAddress = IPAddress[(strings.Index(IPAddress, ".") + 1):] //+1 would get 111.12.12 instead of .111.12.12 I think
-
-	IPFragment = IPAddress[:strings.Index(IPAddress, ".")] //grab the next fragment up until the next "." --> 111
-
-	if len(IPAddress) > 0 { //if we have nothing else to add we need to return nil
-		this.AddChild(IPFragment, IPAddress)
-	}
 
 	return nil
 }
 
-func (this *treeNode) AddChild(IPFragment string, IPAddress string) error {
+func (this *treeNode) addChildNetwork(IPFragment string) error{
+	for _, children := range this.children {
+		if children.value == IPFragment {
+			return nil //Network has already been found we don't care about the children.
+		}
+	}
+
+	//Not found, create new node
+	Child := &treeNode{ //if the child did not exist already, create another treeNode
+		value:    IPFragment,
+		network:  true,
+		children: nil,
+	}
+
+	this.children = append(this.children, *Child) //append the node to the parent
+
+	return nil
+}
+
+func (this *treeNode) addChildNoNetwork(IPFragment, IPAddress string) error {
 
 	// IPFragment --> 111
 	for _, children := range this.children { //loop through all the children already attached to 210
@@ -105,7 +122,7 @@ func (this *treeNode) AddChild(IPFragment string, IPAddress string) error {
 	return nil
 }
 
-func findIndex(IPAddress string, position int) int {
+func findIndex(IPAddress string, position int) int{
 	var count int
 	for i := range IPAddress {
 		if IPAddress[i] == '.' {
@@ -122,7 +139,6 @@ func findIndex(IPAddress string, position int) int {
 		}
 	}
 	return -1
-	//TODO: Return error
 }
 
 //validateNode
