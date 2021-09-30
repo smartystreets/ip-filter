@@ -1,14 +1,15 @@
 package IPFilter
 
+import "C"
 import (
 	"strconv"
 	"strings"
 )
 
 type treeNode struct {
-	value    string     // Partial portion of IPAddress, the value of the node
-	network  bool       // This is what tells us if it is a network or not
-	children []treeNode // The potential children of a node
+	value    string
+	network  bool
+	children []*treeNode
 }
 
 func NewTreeNode() *treeNode {
@@ -18,14 +19,6 @@ func NewTreeNode() *treeNode {
 		children: nil,
 	}
 }
-
-/*
-Becomes:        Network:
-210 <- head     210
-111 <- child    111
-12  <- child    No children
-12  <- child
-*/
 
 //Insert
 /*
@@ -85,34 +78,47 @@ func (this *treeNode) addChildNetwork(IPFragment string) error {
 		}
 	}
 
-	Child := &treeNode{ //if the child did not exist already, create another treeNode
+	child := &treeNode{ //if the child did not exist already, create another treeNode
 		value:    IPFragment,
 		network:  true,
 		children: nil,
 	}
-	this.children = append(this.children, *Child)
+	this.children = append(this.children, child)
 
 	return nil
 }
 func (this *treeNode) addChildNoNetwork(IPAddress string) error {
-	IPFragment := IPAddress[:strings.Index(IPAddress, ".")]
-	for _, children := range this.children { //loop through all the children already attached to 210
-		if children.value == IPFragment {
-			return children.addChildNoNetwork(IPAddress) // if 210 has a child that is equal to 111 then skip this one and call insert to add the rest of the sections to that child
+	var IPFragment string
+
+	if index := strings.Index(IPAddress, "."); index != -1 {
+		IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
+	} else {
+		IPFragment = IPAddress
+		IPAddress = ""
+	}
+	for _, child := range this.children { //loop through all the children already attached to 210
+		if child.value == IPFragment {
+			if index := strings.Index(IPAddress, "."); index != -1 {
+				IPAddress = IPAddress[(index + 1):]
+			}
+			return child.Insert(IPAddress) // if 210 has a child that is equal to 111 then skip this one and call insert to add the rest of the sections to that child
 		}
 	}
 
-	Child := &treeNode{ //if the child did not exist already, create another treeNode
+	child := &treeNode{ //if the child did not exist already, create another treeNode
 		value:    IPFragment,
 		network:  false,
 		children: nil,
 	}
-	this.children = append(this.children, *Child)
 
-	IPAddress = IPAddress[(strings.Index(IPAddress, ".") + 1):]
+	this.children = append(this.children, child)
 
-	if (len(IPAddress) - 1)  != 0 {
-		return Child.addChildNoNetwork(IPAddress)
+	if index := strings.Index(IPAddress, "."); index != -1 {
+		IPAddress = IPAddress[(index + 1):]
+	} //could possibly need to move this
+
+	if err := child.Insert(IPAddress); err != nil {
+		return err
 	}
 
 	return nil

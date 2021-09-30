@@ -10,7 +10,7 @@ func TestNetworks(t *testing.T) {
 	Assert(t).That(len(tree.children)).Equals(0)
 
 	tree.Insert(IPNetwork8)
-	Assert(t).That(tree.children[0]).Equals(treeNode{
+	Assert(t).That(tree.children[0]).Equals(&treeNode{
 		value:    NetworkValue8,
 		network:  true,
 		children: nil,
@@ -18,7 +18,7 @@ func TestNetworks(t *testing.T) {
 	Assert(t).That(len(tree.children)).Equals(1)
 
 	tree.Insert(IPNetwork16)
-	Assert(t).That(tree.children[1]).Equals(treeNode{
+	Assert(t).That(tree.children[1]).Equals(&treeNode{
 		value:    NetworkValue16,
 		network:  true,
 		children: nil,
@@ -26,7 +26,7 @@ func TestNetworks(t *testing.T) {
 	Assert(t).That(len(tree.children)).Equals(2)
 
 	tree.Insert(IPNetwork24)
-	Assert(t).That(tree.children[2]).Equals(treeNode{
+	Assert(t).That(tree.children[2]).Equals(&treeNode{
 		value:    NetworkValue24,
 		network:  true,
 		children: nil,
@@ -34,7 +34,7 @@ func TestNetworks(t *testing.T) {
 	Assert(t).That(len(tree.children)).Equals(3)
 
 	tree.Insert(IPNetwork32)
-	Assert(t).That(tree.children[3]).Equals(treeNode{
+	Assert(t).That(tree.children[3]).Equals(&treeNode{
 		value:    NetworkValue32,
 		network:  true,
 		children: nil,
@@ -47,13 +47,97 @@ func TestNonNetworks(t *testing.T) {
 	Assert(t).That(len(tree.children)).Equals(0)
 
 	tree.Insert("3.144.0.0/13")
-	Assert(t).That(tree.children[0]).Equals(treeNode{
-		value:    "3",
-		network:  false,
-		children: nil,
+	Assert(t).That(tree.children[0]).Equals(&treeNode{
+		value:   "3",
+		network: false,
+		children: []*treeNode{
+			{
+				value:   "144",
+				network: false,
+				children: []*treeNode{
+					{
+						value:   "0",
+						network: false,
+						children: []*treeNode{
+							{
+								value:    "0",
+								network:  false,
+								children: nil,
+							},
+						},
+					},
+				},
+			},
+		},
 	})
 	Assert(t).That(len(tree.children)).Equals(1)
 }
+
+func TestChildAlreadyAdded(t *testing.T) {
+	tree := NewTreeNode() //Creates the blank tree
+	Assert(t).That(len(tree.children)).Equals(0)
+
+	tree.Insert("3.144.0.0/13")
+	Assert(t).That(tree.children[0]).Equals(&treeNode{
+		value:   "3",
+		network: false,
+		children: []*treeNode{
+			{
+				value:   "144",
+				network: false,
+				children: []*treeNode{
+					{
+						value:   "0",
+						network: false,
+						children: []*treeNode{
+							{
+								value:    "0",
+								network:  false,
+								children: nil,
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+}
+
+func TestFindNonNetworkIPAddress(t *testing.T) {
+	tree := NewTreeNode() //Creates the blank tree
+	Assert(t).That(len(tree.children)).Equals(0)
+
+	tree.Insert("3.144.0.0/13")
+	Assert(t).That(tree.children[0]).Equals(treeNode{
+		value:   "3",
+		network: false,
+		children: []*treeNode{
+			{
+				value:   "144",
+				network: false,
+				children: []*treeNode{
+					{
+						value:   "0",
+						network: false,
+						children: []*treeNode{
+							{
+								value:    "0",
+								network:  false,
+								children: nil,
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+	Assert(t).That(len(tree.children)).Equals(1)
+
+	exists := tree.Search("3.144.0.0")
+
+	Assert(t).That(exists).Equals(true)
+}
+
 const (
 	IPNetwork8  = "10.0.0.0/8"
 	IPNetwork16 = "54.168.0.0/16"
