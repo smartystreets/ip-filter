@@ -43,7 +43,7 @@ func TestNetworks(t *testing.T) {
 }
 
 func TestNonNetworks(t *testing.T) {
-	tree := NewTreeNode() //Creates the blank tree
+	tree := NewTreeNode()
 	Assert(t).That(len(tree.children)).Equals(0)
 
 	tree.Insert("3.144.0.0/13")
@@ -72,9 +72,11 @@ func TestNonNetworks(t *testing.T) {
 	})
 	Assert(t).That(len(tree.children)).Equals(1)
 }
-
-func TestChildAlreadyAdded(t *testing.T) {
-	tree := NewTreeNode() //Creates the blank tree
+//TODO: Test multiple levels of children
+//TODO: Test other /13...255?
+//TODO: Do some error checking. I have a few errors in there that could possibly be returned, so you could check those.
+func TestMultipleChildren(t *testing.T){
+	tree := NewTreeNode()
 	Assert(t).That(len(tree.children)).Equals(0)
 
 	tree.Insert("3.144.0.0/13")
@@ -101,6 +103,84 @@ func TestChildAlreadyAdded(t *testing.T) {
 			},
 		},
 	})
+	Assert(t).That(len(tree.children)).Equals(1)
+
+	tree.Insert("3.145.0.0/13")
+	Assert(t).That(tree.children).Equals(&treeNode{
+		value:   "3",
+		network: false,
+		children: []*treeNode{
+			{
+				value:   "144",
+				network: false,
+				children: []*treeNode{
+					{
+						value:   "0",
+						network: false,
+						children: []*treeNode{
+							{
+								value:    "0",
+								network:  false,
+								children: nil,
+							},
+						},
+					},
+				},
+			},
+			{
+				value:   "145",
+				network: false,
+				children: []*treeNode{
+					{
+						value:   "0",
+						network: false,
+						children: []*treeNode{
+							{
+								value:    "0",
+								network:  false,
+								children: nil,
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+	Assert(t).That(len(tree.children[0].children)).Equals(2)
+}
+
+func TestChildAlreadyAdded(t *testing.T) {
+	tree := NewTreeNode()
+	Assert(t).That(len(tree.children)).Equals(0)
+
+	tree.Insert("3.144.0.0/13")
+	Assert(t).That(tree.children[0]).Equals(&treeNode{
+		value:   "3",
+		network: false,
+		children: []*treeNode{
+			{
+				value:   "144",
+				network: false,
+				children: []*treeNode{
+					{
+						value:   "0",
+						network: false,
+						children: []*treeNode{
+							{
+								value:    "0",
+								network:  false,
+								children: nil,
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+	Assert(t).That(len(tree.children)).Equals(1)
+
+	tree.Insert("3.144.0.0/13")
+	Assert(t).That(len(tree.children)).Equals(1)
 }
 
 func TestFindNonNetworkIPAddress(t *testing.T) {
@@ -108,7 +188,7 @@ func TestFindNonNetworkIPAddress(t *testing.T) {
 	Assert(t).That(len(tree.children)).Equals(0)
 
 	tree.Insert("3.144.0.0/13")
-	Assert(t).That(tree.children[0]).Equals(treeNode{
+	Assert(t).That(tree.children[0]).Equals(&treeNode{
 		value:   "3",
 		network: false,
 		children: []*treeNode{
@@ -132,10 +212,6 @@ func TestFindNonNetworkIPAddress(t *testing.T) {
 		},
 	})
 	Assert(t).That(len(tree.children)).Equals(1)
-
-	exists := tree.Search("3.144.0.0")
-
-	Assert(t).That(exists).Equals(true)
 }
 
 const (

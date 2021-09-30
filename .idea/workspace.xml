@@ -29,7 +29,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.16.5/libexec" />
+  <component name="GOROOT" path="/usr/local/Cellar/go/1.16.3/libexec" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -50,68 +50,68 @@
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
   </component>
-  <component name="RunManager" selected="Go Test.TestChildAlreadyAdded in github.com/smartystreets/ip-filter">
-    <configuration name="TestChildAlreadyAdded in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Test.go test github.com/smartystreets/ip-filter">
+    <configuration name="TestChildAlreadyAdded in github.com/smartystreets/ip-filter (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
       <kind value="PACKAGE" />
       <package value="github.com/smartystreets/ip-filter" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
       <pattern value="^\QTestChildAlreadyAdded\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestChildAlreadyAdded in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
       <kind value="PACKAGE" />
       <package value="github.com/smartystreets/ip-filter" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestFindNonNetworkIPAddress\E$" />
+      <pattern value="^\QTestChildAlreadyAdded\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestNetworks in github.com/smartystreets/ip-filter (3)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
       <kind value="PACKAGE" />
       <package value="github.com/smartystreets/ip-filter" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestNetworks\E$" />
+      <pattern value="^\QTestFindNonNetworkIPAddress\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestNonNetworks in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
       <kind value="PACKAGE" />
       <package value="github.com/smartystreets/ip-filter" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
       <pattern value="^\QTestNonNetworks\E$" />
       <method v="2" />
     </configuration>
     <configuration name="go test github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
       <kind value="PACKAGE" />
       <package value="github.com/smartystreets/ip-filter" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.go test github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestChildAlreadyAdded in github.com/smartystreets/ip-filter (1)" />
+        <item itemvalue="Go Test.TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter (1)" />
         <item itemvalue="Go Test.TestChildAlreadyAdded in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.TestNonNetworks in github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.go test github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestNetworks in github.com/smartystreets/ip-filter (3)" />
       </list>
     </recent_temporary>
   </component>
@@ -134,18 +134,56 @@
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
   </component>
+  <component name="WindowStateProjectService">
+    <state x="674" y="-587" key="#GOROOT" timestamp="1633040415342">
+      <screen x="-503" y="-1042" width="2560" height="1042" />
+    </state>
+    <state x="674" y="-587" key="#GOROOT/-503.-1042.2560.1042/0.25.1440.875@-503.-1042.2560.1042" timestamp="1633040415342" />
+    <state width="2539" height="321" key="GridCell.Tab.0.bottom" timestamp="1633043752108">
+      <screen x="-503" y="-1042" width="2560" height="1042" />
+    </state>
+    <state width="2539" height="321" key="GridCell.Tab.0.bottom/-503.-1042.2560.1042/0.25.1440.875@-503.-1042.2560.1042" timestamp="1633043752108" />
+    <state width="2539" height="321" key="GridCell.Tab.0.center" timestamp="1633043752107">
+      <screen x="-503" y="-1042" width="2560" height="1042" />
+    </state>
+    <state width="2539" height="321" key="GridCell.Tab.0.center/-503.-1042.2560.1042/0.25.1440.875@-503.-1042.2560.1042" timestamp="1633043752107" />
+    <state width="2539" height="321" key="GridCell.Tab.0.left" timestamp="1633043752107">
+      <screen x="-503" y="-1042" width="2560" height="1042" />
+    </state>
+    <state width="2539" height="321" key="GridCell.Tab.0.left/-503.-1042.2560.1042/0.25.1440.875@-503.-1042.2560.1042" timestamp="1633043752107" />
+    <state width="2539" height="321" key="GridCell.Tab.0.right" timestamp="1633043752108">
+      <screen x="-503" y="-1042" width="2560" height="1042" />
+    </state>
+    <state width="2539" height="321" key="GridCell.Tab.0.right/-503.-1042.2560.1042/0.25.1440.875@-503.-1042.2560.1042" timestamp="1633043752108" />
+    <state width="2539" height="359" key="GridCell.Tab.1.bottom" timestamp="1633043158151">
+      <screen x="-503" y="-1042" width="2560" height="1042" />
+    </state>
+    <state width="2539" height="359" key="GridCell.Tab.1.bottom/-503.-1042.2560.1042/0.25.1440.875@-503.-1042.2560.1042" timestamp="1633043158151" />
+    <state width="2539" height="359" key="GridCell.Tab.1.center" timestamp="1633043158151">
+      <screen x="-503" y="-1042" width="2560" height="1042" />
+    </state>
+    <state width="2539" height="359" key="GridCell.Tab.1.center/-503.-1042.2560.1042/0.25.1440.875@-503.-1042.2560.1042" timestamp="1633043158151" />
+    <state width="2539" height="359" key="GridCell.Tab.1.left" timestamp="1633043158150">
+      <screen x="-503" y="-1042" width="2560" height="1042" />
+    </state>
+    <state width="2539" height="359" key="GridCell.Tab.1.left/-503.-1042.2560.1042/0.25.1440.875@-503.-1042.2560.1042" timestamp="1633043158150" />
+    <state width="2539" height="359" key="GridCell.Tab.1.right" timestamp="1633043158151">
+      <screen x="-503" y="-1042" width="2560" height="1042" />
+    </state>
+    <state width="2539" height="359" key="GridCell.Tab.1.right/-503.-1042.2560.1042/0.25.1440.875@-503.-1042.2560.1042" timestamp="1633043158151" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree.go</url>
-          <line>161</line>
+          <line>160</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>63</line>
-          <option name="timeStamp" value="39" />
+          <line>148</line>
+          <option name="timeStamp" value="41" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
