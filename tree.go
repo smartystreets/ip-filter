@@ -10,7 +10,6 @@ type treeNode struct {
 	value    string
 	minValue string
 	maxValue string
-	network  bool
 	children []*treeNode
 }
 
@@ -19,7 +18,6 @@ func NewTreeNode() *treeNode {
 		value:    "",
 		minValue: "",
 		maxValue: "",
-		network:  false,
 		children: nil,
 	}
 }
@@ -38,25 +36,25 @@ func (this *treeNode) Insert(IPAddress string) error {
 		subnetBits, _ := strconv.Atoi(IPAddress[position+1:])
 		if subnetBits == 8 {
 			IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
-			this.addChildNetwork(IPFragment)
+			this.addChildNetwork("", "", IPFragment)
 			return nil
 		}
 		if subnetBits == 16 {
 			index := findIndex(IPAddress, 16) //5
 			IPFragment = IPAddress[:index]    //this current returns 210.111  --> without the second dot
-			this.addChildNetwork(IPFragment)
+			this.addChildNetwork("", "", IPFragment)
 			return nil
 		}
 		if subnetBits == 24 {
 			//everything up to the third dot can be a node
 			index := findIndex(IPAddress, 24)
 			IPFragment = IPAddress[:index] //this current returns 210.111  --> without the second dot
-			this.addChildNetwork(IPFragment)
+			this.addChildNetwork("", "", IPFragment)
 			return nil
 		}
 		if subnetBits == 32 {
 			IPFragment = IPAddress[:position]
-			this.addChildNetwork(IPFragment)
+			this.addChildNetwork("", "", IPFragment)
 			return nil
 		}
 		IPAddress = IPAddress[:position]
@@ -68,7 +66,10 @@ func (this *treeNode) Insert(IPAddress string) error {
 			valueToAdd := (2 ^ changeableBits) - 1
 
 			maxValue := strconv.Itoa(minValue + valueToAdd)
-			this.addChildNoNetwork(maxValue, strconv.Itoa(minValue), IPAddress)
+
+			IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
+			this.addChildNetwork(maxValue, strconv.Itoa(minValue), IPFragment)
+			this.addChildNoNetwork(maxValue, strconv.Itoa(minValue))
 		}
 		if subnetBits > 16 && subnetBits < 24 {
 			minValue, _ := strconv.Atoi(IPAddress[:findIndex(IPAddress, 16)])
@@ -78,7 +79,7 @@ func (this *treeNode) Insert(IPAddress string) error {
 
 			maxValue := strconv.Itoa(minValue + valueToAdd)
 
-			this.addChildNoNetwork(maxValue, strconv.Itoa(minValue), IPAddress)
+			this.addChildNoNetwork(maxValue, strconv.Itoa(minValue))
 		}
 		if subnetBits > 24 && subnetBits < 32 {
 			minValue, _ := strconv.Atoi(IPAddress[:findIndex(IPAddress, 24)])
@@ -87,65 +88,51 @@ func (this *treeNode) Insert(IPAddress string) error {
 			valueToAdd := (2 ^ changeableBits) - 1
 
 			maxValue := strconv.Itoa(minValue + valueToAdd)
-			this.addChildNoNetwork(maxValue, strconv.Itoa(minValue), IPAddress)
+			this.addChildNoNetwork(maxValue, strconv.Itoa(minValue))
 		}
 
 	}
 	return nil
 }
 
-func (this *treeNode) addChildNetwork(IPFragment string) error {
+func (this *treeNode) addChildNetwork(maxValue, minValue, IPFragment string) error {
+
 	for _, children := range this.children {
 		if children.value == IPFragment {
-			return nil //Network has already been found we don't care about the children.
-		}
-	}
-
-	child := &treeNode{ //if the child did not exist already, create another treeNode
-		value:    IPFragment,
-		network:  true,
-		children: nil,
-	}
-	this.children = append(this.children, child)
-
-	return nil
-}
-func (this *treeNode) addChildNoNetwork(maxValue, minValue, IPAddress string) error {
-	if len(IPAddress) == 0 {
-		return nil
-	}
-
-	var IPFragment string
-	var index int
-
-	if index = strings.Index(IPAddress, "."); index != -1 {
-		IPFragment = IPAddress[:index]
-	} else {
-		IPFragment = IPAddress
-		IPAddress = ""
-	}
-	for _, child := range this.children {
-		if child.value == IPFragment {
-			if index != -1 {
-				IPAddress = IPAddress[(index + 1):]
-			}
-			return child.addChildNoNetwork(IPAddress)
+			return nil
 		}
 	}
 
 	child := &treeNode{
 		value:    IPFragment,
-		network:  false,
+		children: nil,
+	}
+	this.children = append(this.children, child)
+
+	if maxValue == "" && minValue == "" {
+		return nil
+	}
+
+	child.addChildNoNetwork(maxValue, minValue)
+	return nil
+}
+func (this *treeNode) addChildNoNetwork(maxValue, minValue string) error {
+
+	for _, children := range this.children {
+		if children.minValue == minValue && children.maxValue == maxValue {
+			return nil
+		}
+	}
+
+	child := &treeNode{
+		minValue: minValue,
+		maxValue: maxValue,
 		children: nil,
 	}
 
 	this.children = append(this.children, child)
 
-	if index != -1 {
-		IPAddress = IPAddress[(index + 1):]
-	}
-
-	return child.addChildNoNetwork(IPAddress)
+	return nil
 }
 
 func findIndex(IPAddress string, position int) int {
@@ -177,11 +164,11 @@ func (this *treeNode) Search(IPAddress string) bool {
 	indexes := findIndexes(IPAddress) //TODO: add a check here?
 
 	for i, child := range this.children {
-		if child.network == true {
-			if this.searchNetworkChild(IPAddress, indexes) {
-				return true
-			}
-		}
+		//if child.network == true {
+		//	if this.searchNetworkChild(IPAddress, indexes) {
+		//		return true
+		//	}
+		//}
 
 		if indexes == nil { //TODO: forse just add a check if the indexes are empty
 			if child.value != IPAddress {
@@ -234,9 +221,9 @@ func (this *treeNode) searchNetworkChild(IPAddress string, Indexes []int) bool {
 			if child.value != fragment {
 				continue
 			}
-			if child.network == true {
-				return true
-			}
+			//if child.network == true {
+			//	return true
+			//}
 		}
 	}
 	return false
