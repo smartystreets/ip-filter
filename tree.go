@@ -2,22 +2,23 @@ package IPFilter
 
 import "C"
 import (
+	"math"
 	"strconv"
 	"strings"
 )
 
 type treeNode struct {
 	value    string
-	minValue string
-	maxValue string
+	minValue uint64
+	maxValue uint64
 	children []*treeNode
 }
 
 func NewTreeNode() *treeNode {
 	return &treeNode{
 		value:    "",
-		minValue: "",
-		maxValue: "",
+		minValue: 0,
+		maxValue: 0,
 		children: nil,
 	}
 }
@@ -33,69 +34,85 @@ func (this *treeNode) Insert(IPAddress string) error {
 
 	var IPFragment string
 	if position := strings.Index(IPAddress, "/"); position != -1 {
+
 		subnetBits, _ := strconv.Atoi(IPAddress[position+1:])
+
 		if subnetBits == 8 {
 			IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
-			this.addChildNetwork("", "", IPFragment)
+			this.addChildNetwork(0, 0, IPFragment)
 			return nil
 		}
 		if subnetBits == 16 {
 			index := findIndex(IPAddress, 16) //5
 			IPFragment = IPAddress[:index]    //this current returns 210.111  --> without the second dot
-			this.addChildNetwork("", "", IPFragment)
+			this.addChildNetwork(0, 0, IPFragment)
 			return nil
 		}
 		if subnetBits == 24 {
 			//everything up to the third dot can be a node
 			index := findIndex(IPAddress, 24)
 			IPFragment = IPAddress[:index] //this current returns 210.111  --> without the second dot
-			this.addChildNetwork("", "", IPFragment)
+			this.addChildNetwork(0, 0, IPFragment)
 			return nil
 		}
 		if subnetBits == 32 {
 			IPFragment = IPAddress[:position]
-			this.addChildNetwork("", "", IPFragment)
+			this.addChildNetwork(0, 0, IPFragment)
 			return nil
 		}
 		IPAddress = IPAddress[:position]
 
 		if subnetBits > 8 && subnetBits < 16 {
-			minValue, _ := strconv.Atoi(IPAddress[:strings.Index(IPAddress, ".")])
+			firstSection := strings.Index(IPAddress, ".")
+			secondSection := findIndex(IPAddress, 16)
+
+			minValue, _ := strconv.ParseUint(string(IPAddress[firstSection+1:secondSection]), 10, 64)
+
 			changeableBits := 16 - subnetBits
 
-			valueToAdd := (2 ^ changeableBits) - 1
+			valueToAdd := powInt(2, changeableBits) - 1
 
-			maxValue := strconv.Itoa(minValue + valueToAdd)
+			maxValue := minValue + valueToAdd
 
 			IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
-			this.addChildNetwork(maxValue, strconv.Itoa(minValue), IPFragment)
-			this.addChildNoNetwork(maxValue, strconv.Itoa(minValue))
+
+			this.addChildNetwork(maxValue, minValue, IPFragment)
+			return nil
 		}
 		if subnetBits > 16 && subnetBits < 24 {
-			minValue, _ := strconv.Atoi(IPAddress[:findIndex(IPAddress, 16)])
+			minValue, _ := strconv.ParseUint(string(IPAddress[findIndex(IPAddress, 16):findIndex(IPAddress, 24)]), 10, 64)
+
 			changeableBits := 24 - subnetBits
 
-			valueToAdd := (2 ^ changeableBits) - 1
+			valueToAdd := powInt(2, changeableBits) - 1
 
-			maxValue := strconv.Itoa(minValue + valueToAdd)
+			maxValue := minValue + valueToAdd
 
-			this.addChildNoNetwork(maxValue, strconv.Itoa(minValue))
+			IPFragment = IPAddress[:findIndex(IPAddress, 16)]
+
+			this.addChildNetwork(maxValue, minValue, IPFragment)
+			return nil
 		}
 		if subnetBits > 24 && subnetBits < 32 {
-			minValue, _ := strconv.Atoi(IPAddress[:findIndex(IPAddress, 24)])
+			minValue, _ := strconv.ParseUint(string(IPAddress[findIndex(IPAddress, 24):]), 10, 64)
+
 			changeableBits := 24 - subnetBits
 
-			valueToAdd := (2 ^ changeableBits) - 1
+			valueToAdd := powInt(2, changeableBits) - 1
 
-			maxValue := strconv.Itoa(minValue + valueToAdd)
-			this.addChildNoNetwork(maxValue, strconv.Itoa(minValue))
+			maxValue := minValue + valueToAdd
+
+			IPFragment = IPAddress[:findIndex(IPAddress, 24)]
+
+			this.addChildNetwork(maxValue, minValue, IPFragment)
+			return nil
 		}
 
 	}
 	return nil
 }
 
-func (this *treeNode) addChildNetwork(maxValue, minValue, IPFragment string) error {
+func (this *treeNode) addChildNetwork(maxValue, minValue uint64, IPFragment string) error {
 
 	for _, children := range this.children {
 		if children.value == IPFragment {
@@ -107,16 +124,17 @@ func (this *treeNode) addChildNetwork(maxValue, minValue, IPFragment string) err
 		value:    IPFragment,
 		children: nil,
 	}
+
 	this.children = append(this.children, child)
 
-	if maxValue == "" && minValue == "" {
+	if maxValue == 0 {
 		return nil
 	}
 
 	child.addChildNoNetwork(maxValue, minValue)
 	return nil
 }
-func (this *treeNode) addChildNoNetwork(maxValue, minValue string) error {
+func (this *treeNode) addChildNoNetwork(maxValue, minValue uint64) error {
 
 	for _, children := range this.children {
 		if children.minValue == minValue && children.maxValue == maxValue {
@@ -149,6 +167,10 @@ func findIndex(IPAddress string, position int) int {
 		}
 	}
 	return -1
+}
+
+func powInt(x, y int) uint64 {
+	return uint64(math.Pow(float64(x), float64(y)))
 }
 
 //Search

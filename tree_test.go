@@ -47,30 +47,20 @@ func TestNonNetworks(t *testing.T) {
 		value: "3",
 		children: []*treeNode{
 			{
-				minValue: "144",
-				maxValue: "151",
+				minValue: 144,
+				maxValue: 151,
 			},
 		},
 	})
 	Assert(t).That(len(tree.children)).Equals(1)
 
-	//tree.Insert("54.233.0.0/18")
+	tree.Insert("54.233.0.0/18")
 	Assert(t).That(tree.children[1]).Equals(&treeNode{
-		value: "54",
+		value: "54.233",
 		children: []*treeNode{
 			{
-				value: "233",
-				children: []*treeNode{
-					{
-						value: "0",
-						children: []*treeNode{
-							{
-								value:    "0",
-								children: nil,
-							},
-						},
-					},
-				},
+				minValue: 0,
+				maxValue: 63,
 			},
 		},
 	},
@@ -87,18 +77,8 @@ func TestMultipleChildren(t *testing.T) {
 		value: "3",
 		children: []*treeNode{
 			{
-				value: "144",
-				children: []*treeNode{
-					{
-						value: "0",
-						children: []*treeNode{
-							{
-								value:    "0",
-								children: nil,
-							},
-						},
-					},
-				},
+				minValue: 144,
+				maxValue: 151,
 			},
 		},
 	})
@@ -109,32 +89,12 @@ func TestMultipleChildren(t *testing.T) {
 		value: "3",
 		children: []*treeNode{
 			{
-				value: "144",
-				children: []*treeNode{
-					{
-						value: "0",
-						children: []*treeNode{
-							{
-								value:    "0",
-								children: nil,
-							},
-						},
-					},
-				},
+				minValue: 144,
+				maxValue: 151,
 			},
 			{
-				value: "145",
-				children: []*treeNode{
-					{
-						value: "0",
-						children: []*treeNode{
-							{
-								value:    "0",
-								children: nil,
-							},
-						},
-					},
-				},
+				minValue: 145,
+				maxValue: 151,
 			},
 		},
 	})
