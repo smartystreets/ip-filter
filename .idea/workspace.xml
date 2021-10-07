@@ -50,7 +50,7 @@
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
   </component>
-  <component name="RunManager" selected="Go Test.TestMultipleChildren in github.com/smartystreets/ip-filter">
+  <component name="RunManager" selected="Go Test.TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter">
     <configuration name="TestFindNetworkAndNonNetwork in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
@@ -62,7 +62,7 @@
       <pattern value="^\QTestFindNetworkAndNonNetwork\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestMultipleChildren in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestFindNetworkIPAddress in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
@@ -70,7 +70,18 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestMultipleChildren\E$" />
+      <pattern value="^\QTestFindNetworkIPAddress\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="ip-filter" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/smartystreets/ip-filter" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestFindNonNetworkIPAddress\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestNetworks in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -82,17 +93,6 @@
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
       <pattern value="^\QTestNetworks\E$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestNonNetworks in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="ip-filter" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="github.com/smartystreets/ip-filter" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestNonNetworks\E$" />
       <method v="2" />
     </configuration>
     <configuration name="go test github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -107,11 +107,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestMultipleChildren in github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestNonNetworks in github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestNetworks in github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.go test github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.TestFindNetworkAndNonNetwork in github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestFindNetworkIPAddress in github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestNetworks in github.com/smartystreets/ip-filter" />
       </list>
     </recent_temporary>
   </component>
@@ -139,25 +139,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>108</line>
-          <option name="timeStamp" value="41" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>403</line>
-          <option name="timeStamp" value="49" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>447</line>
+          <line>341</line>
           <option name="timeStamp" value="58" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>86</line>
-          <option name="timeStamp" value="85" />
+          <url>file://$PROJECT_DIR$/tree.go</url>
+          <line>216</line>
+          <option name="timeStamp" value="121" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ip_filter$TestFindNetworkAndNonNetwork_in_github_com_smartystreets_ip_filter.out" NAME="TestFindNetworkAndNonNetwork in github.com/smartystreets/ip-filter Coverage Results" MODIFIED="1633639827513" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

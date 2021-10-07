@@ -80,7 +80,9 @@ func (this *treeNode) Insert(IPAddress string) error {
 			return nil
 		}
 		if subnetBits > 16 && subnetBits < 24 {
-			minValue, _ := strconv.ParseUint(string(IPAddress[findIndex(IPAddress, 16):findIndex(IPAddress, 24)]), 10, 64)
+			firstSection := findIndex(IPAddress, 16)
+			secondSection := findIndex(IPAddress, 24)
+			minValue, _ := strconv.ParseUint(IPAddress[(firstSection+1):secondSection], 10, 64)
 
 			changeableBits := 24 - subnetBits
 
@@ -94,9 +96,9 @@ func (this *treeNode) Insert(IPAddress string) error {
 			return nil
 		}
 		if subnetBits > 24 && subnetBits < 32 {
-			minValue, _ := strconv.ParseUint(string(IPAddress[findIndex(IPAddress, 24):]), 10, 64)
+			minValue, _ := strconv.ParseUint(IPAddress[findIndex(IPAddress, 24)+1:], 10, 64)
 
-			changeableBits := 24 - subnetBits
+			changeableBits := 32 - subnetBits
 
 			valueToAdd := powInt(2, changeableBits) - 1
 
@@ -116,7 +118,13 @@ func (this *treeNode) addChildNetwork(maxValue, minValue uint64, IPFragment stri
 
 	for _, children := range this.children {
 		if children.value == IPFragment {
-			return nil
+			for _, childrenRanges := range children.children {
+				if childrenRanges.minValue == minValue && childrenRanges.maxValue == maxValue {
+					return nil
+				}
+				children.addChildNoNetwork(maxValue, minValue)
+				return nil
+			}
 		}
 	}
 
@@ -178,38 +186,55 @@ func powInt(x, y int) uint64 {
 Will search the tree for a specific IPAddress within our nodes
 */
 func (this *treeNode) Search(IPAddress string) bool {
+	var childRange string
 	var fragment string
 	if len(IPAddress) == 0 {
-		return false //TODO need to return error here?
+		return false
 	}
 
-	indexes := findIndexes(IPAddress) //TODO: add a check here?
+	indexes := findIndexes(IPAddress)
+	for i := 0; i < 4; i++ {
 
-	for i, child := range this.children {
-		//if child.network == true {
-		//	if this.searchNetworkChild(IPAddress, indexes) {
-		//		return true
-		//	}
-		//}
+		if i == 3 {
+			fragment = IPAddress
+		} else {
+			fragment = IPAddress[:indexes[i]]
+		}
 
-		if indexes == nil { //TODO: forse just add a check if the indexes are empty
-			if child.value != IPAddress {
+		for j, child := range this.children {
+
+			if child.value != fragment {
 				continue
 			}
-			return true
-		}
 
-		fragment = IPAddress[:indexes[i]] //TODO: add a check here for out of range //ALSO can I just hard card a 0?
-
-		if child.value != fragment {
-			continue
-		}
-
-		remainingAddress := IPAddress[len(fragment)+1:]
-
-		if len(remainingAddress) > 0 { //TODO: Do I still need this one?
-			if true == child.Search(remainingAddress) {
+			// if the IPAddress fragment is found then
+			//check to see if the network is set to true
+			if child.children == nil {
+				//if set to true then return true
 				return true
+			}
+
+			//Get the section
+			//TODO: There is an error
+			//TODO: This is where we are getting thrown off for the tests
+			if j == 0 {
+				childRange = IPAddress[(indexes[j] + 1):indexes[(j+1)]]
+			} else {
+				childRange = IPAddress[(indexes[(j-1)] + 1):indexes[j]]
+			}
+
+			//turn that magic section to a number
+			parsed, err := strconv.ParseUint(childRange, 10, 32)
+
+			if err != nil {
+				return false //TODO: return error?
+			}
+
+			//loop through it's children
+			for _, c := range child.children {
+				if parsed >= c.minValue && parsed <= c.maxValue {
+					return true
+				}
 			}
 		}
 	}
