@@ -50,7 +50,7 @@
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
   </component>
-  <component name="RunManager" selected="Go Test.TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter">
+  <component name="RunManager" selected="Go Test.go test github.com/smartystreets/ip-filter">
     <configuration name="TestFindNetworkAndNonNetwork in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
@@ -107,10 +107,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.go test github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.TestFindNetworkAndNonNetwork in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.TestFindNetworkIPAddress in github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.TestNetworks in github.com/smartystreets/ip-filter" />
       </list>
     </recent_temporary>
@@ -139,13 +139,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>341</line>
+          <line>414</line>
           <option name="timeStamp" value="58" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/tree.go</url>
-          <line>216</line>
-          <option name="timeStamp" value="121" />
+          <url>file://$PROJECT_DIR$/tree_test.go</url>
+          <line>300</line>
+          <option name="timeStamp" value="133" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
