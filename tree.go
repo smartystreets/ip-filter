@@ -23,10 +23,6 @@ func NewTreeNode() *treeNode {
 	}
 }
 
-//Insert
-/*
-Will take in an IP Address as a string and will insert it into the tree accordingly
-*/
 func (this *treeNode) Insert(IPAddress string) error {
 	if len(IPAddress) == 0 {
 		return ErrInvalidIPAddress
@@ -39,25 +35,24 @@ func (this *treeNode) Insert(IPAddress string) error {
 
 		if subnetBits == 8 {
 			IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
-			this.addChildNetwork(0, 0, IPFragment)
+			this.addNetworkChild(0, 0, IPFragment)
 			return nil
 		}
 		if subnetBits == 16 {
-			index := findIndex(IPAddress, 16) //5
-			IPFragment = IPAddress[:index]    //this current returns 210.111  --> without the second dot
-			this.addChildNetwork(0, 0, IPFragment)
+			index := findIndex(IPAddress, 16)
+			IPFragment = IPAddress[:index]
+			this.addNetworkChild(0, 0, IPFragment)
 			return nil
 		}
 		if subnetBits == 24 {
-			//everything up to the third dot can be a node
 			index := findIndex(IPAddress, 24)
-			IPFragment = IPAddress[:index] //this current returns 210.111  --> without the second dot
-			this.addChildNetwork(0, 0, IPFragment)
+			IPFragment = IPAddress[:index]
+			this.addNetworkChild(0, 0, IPFragment)
 			return nil
 		}
 		if subnetBits == 32 {
 			IPFragment = IPAddress[:position]
-			this.addChildNetwork(0, 0, IPFragment)
+			this.addNetworkChild(0, 0, IPFragment)
 			return nil
 		}
 		IPAddress = IPAddress[:position]
@@ -66,7 +61,7 @@ func (this *treeNode) Insert(IPAddress string) error {
 			firstSection := strings.Index(IPAddress, ".")
 			secondSection := findIndex(IPAddress, 16)
 
-			minValue, _ := strconv.ParseUint(string(IPAddress[firstSection+1:secondSection]), 10, 64)
+			minValue, _ := strconv.ParseUint(IPAddress[firstSection+1:secondSection], 10, 64)
 
 			changeableBits := 16 - subnetBits
 
@@ -76,13 +71,13 @@ func (this *treeNode) Insert(IPAddress string) error {
 
 			IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
 
-			this.addChildNetwork(maxValue, minValue, IPFragment)
+			this.addNetworkChild(maxValue, minValue, IPFragment)
 			return nil
 		}
 		if subnetBits > 16 && subnetBits < 24 {
 			firstSection := findIndex(IPAddress, 16)
 			secondSection := findIndex(IPAddress, 24)
-			minValue, _ := strconv.ParseUint(IPAddress[(firstSection+1):secondSection], 10, 64)
+			minValue, _ := strconv.ParseUint(IPAddress[firstSection+1:secondSection], 10, 64)
 
 			changeableBits := 24 - subnetBits
 
@@ -92,7 +87,7 @@ func (this *treeNode) Insert(IPAddress string) error {
 
 			IPFragment = IPAddress[:findIndex(IPAddress, 16)]
 
-			this.addChildNetwork(maxValue, minValue, IPFragment)
+			this.addNetworkChild(maxValue, minValue, IPFragment)
 			return nil
 		}
 		if subnetBits > 24 && subnetBits < 32 {
@@ -106,7 +101,7 @@ func (this *treeNode) Insert(IPAddress string) error {
 
 			IPFragment = IPAddress[:findIndex(IPAddress, 24)]
 
-			this.addChildNetwork(maxValue, minValue, IPFragment)
+			this.addNetworkChild(maxValue, minValue, IPFragment)
 			return nil
 		}
 
@@ -114,7 +109,7 @@ func (this *treeNode) Insert(IPAddress string) error {
 	return nil
 }
 
-func (this *treeNode) addChildNetwork(maxValue, minValue uint64, IPFragment string) error {
+func (this *treeNode) addNetworkChild(maxValue, minValue uint64, IPFragment string) error {
 
 	for _, children := range this.children {
 		if children.value == IPFragment {
@@ -122,7 +117,7 @@ func (this *treeNode) addChildNetwork(maxValue, minValue uint64, IPFragment stri
 				if childrenRanges.minValue == minValue && childrenRanges.maxValue == maxValue {
 					return nil
 				}
-				children.addChildNoNetwork(maxValue, minValue)
+				children.addMinMaxChild(maxValue, minValue)
 				return nil
 			}
 		}
@@ -139,10 +134,10 @@ func (this *treeNode) addChildNetwork(maxValue, minValue uint64, IPFragment stri
 		return nil
 	}
 
-	child.addChildNoNetwork(maxValue, minValue)
+	child.addMinMaxChild(maxValue, minValue)
 	return nil
 }
-func (this *treeNode) addChildNoNetwork(maxValue, minValue uint64) error {
+func (this *treeNode) addMinMaxChild(maxValue, minValue uint64) error {
 
 	for _, children := range this.children {
 		if children.minValue == minValue && children.maxValue == maxValue {
@@ -181,10 +176,6 @@ func powInt(x, y int) uint64 {
 	return uint64(math.Pow(float64(x), float64(y)))
 }
 
-//Search
-/*
-Will search the tree for a specific IPAddress within our nodes
-*/
 func (this *treeNode) Search(IPAddress string) bool {
 	var childRange string
 	var fragment string
@@ -193,7 +184,8 @@ func (this *treeNode) Search(IPAddress string) bool {
 	}
 
 	indexes := findIndexes(IPAddress)
-	for i := 0; i < 4; i++ {
+
+	for i := 3; i >= 0; i-- {
 
 		if i == 3 {
 			fragment = IPAddress
@@ -201,36 +193,38 @@ func (this *treeNode) Search(IPAddress string) bool {
 			fragment = IPAddress[:indexes[i]]
 		}
 
-		for j, child := range this.children {
+		for _, child := range this.children {
 
 			if child.value != fragment {
 				continue
 			}
 
-			// if the IPAddress fragment is found then
-			//check to see if the network is set to true
 			if child.children == nil {
-				//if set to true then return true
 				return true
 			}
 
-			//Get the section
-			//TODO: There is an error
-			//TODO: This is where we are getting thrown off for the tests
-			if j == 0 {
-				childRange = IPAddress[(indexes[j] + 1):indexes[(j+1)]]
-			} else {
-				childRange = IPAddress[(indexes[(j-1)] + 1):indexes[j]]
+			firstSection := len(fragment) + 1
+			var secondSection int
+
+			for t, x := range indexes {
+				if t == 2 {
+					secondSection = len(IPAddress)
+					break
+				}
+				if firstSection > x && firstSection < indexes[t+1] {
+					secondSection = indexes[t+1]
+					break
+				}
 			}
 
-			//turn that magic section to a number
+			childRange = IPAddress[firstSection:secondSection]
+
 			parsed, err := strconv.ParseUint(childRange, 10, 32)
 
 			if err != nil {
 				return false //TODO: return error?
 			}
 
-			//loop through it's children
 			for _, c := range child.children {
 				if parsed >= c.minValue && parsed <= c.maxValue {
 					return true
@@ -238,7 +232,6 @@ func (this *treeNode) Search(IPAddress string) bool {
 			}
 		}
 	}
-
 	return false
 }
 
@@ -250,28 +243,4 @@ func findIndexes(IPAddress string) []int {
 		}
 	}
 	return indexes
-}
-
-func (this *treeNode) searchNetworkChild(IPAddress string, Indexes []int) bool { // indexes will Always be 3
-	var fragment string
-	i := 0
-	for i < 4 {
-		if i == 3 {
-			fragment = IPAddress
-			i = 5
-		} else {
-			fragment = IPAddress[:Indexes[i]]
-			i++
-		}
-
-		for _, child := range this.children {
-			if child.value != fragment {
-				continue
-			}
-			//if child.network == true {
-			//	return true
-			//}
-		}
-	}
-	return false
 }
