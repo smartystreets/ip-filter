@@ -222,7 +222,7 @@ func (this *treeNode) Search(IPAddress string) bool {
 			parsed, err := strconv.ParseUint(childRange, 10, 32)
 
 			if err != nil {
-				return false //TODO: return error?
+				return false
 			}
 
 			for _, c := range child.children {

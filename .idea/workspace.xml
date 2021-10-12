@@ -50,7 +50,29 @@
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
   </component>
-  <component name="RunManager" selected="Go Test.go test github.com/smartystreets/ip-filter">
+  <component name="RunManager" selected="Go Test.BenchmarkTreeTest in github.com/smartystreets/ip-filter">
+    <configuration name="BenchmarkTreeTest in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="ip-filter" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/smartystreets/ip-filter" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gobench" />
+      <pattern value="^\QBenchmarkTreeTest\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestFindIPAddressWithMinMax in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="ip-filter" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/smartystreets/ip-filter" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestFindIPAddressWithMinMax\E$" />
+      <method v="2" />
+    </configuration>
     <configuration name="TestFindNetworkAndNonNetwork in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
@@ -73,28 +95,6 @@
       <pattern value="^\QTestFindNetworkIPAddress\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="ip-filter" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="github.com/smartystreets/ip-filter" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestFindNonNetworkIPAddress\E$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestNetworks in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="ip-filter" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="github.com/smartystreets/ip-filter" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestNetworks\E$" />
-      <method v="2" />
-    </configuration>
     <configuration name="go test github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
@@ -107,11 +107,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.BenchmarkTreeTest in github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestFindIPAddressWithMinMax in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.go test github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.TestFindNetworkAndNonNetwork in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.TestFindNetworkIPAddress in github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestFindNonNetworkIPAddress in github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestNetworks in github.com/smartystreets/ip-filter" />
       </list>
     </recent_temporary>
   </component>
@@ -139,7 +139,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>414</line>
+          <line>426</line>
           <option name="timeStamp" value="58" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">

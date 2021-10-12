@@ -424,3 +424,24 @@ func (this *Assertion) Equals(expected interface{}) {
 		this.Errorf("\nExpected: %#v\nActual:   %#v", expected, this.actual)
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func BenchmarkTreeTest(b *testing.B) {
+	IpToSearch := "3.5.140.0/22"
+
+	Tree := NewTreeNode()
+
+	Tree.Insert("3.5.140.0/22")
+	Tree.Insert("13.34.37.64/27")
+	Tree.Insert("2.93.178.234/32")
+	Tree.Insert("52.95.36.0/22")
+	Tree.Insert("52.94.76.0/22")
+	Tree.Insert("150.222.81.0/24")
+
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		_ = Tree.Search(IpToSearch)
+	}
+	b.ReportAllocs()
+}
