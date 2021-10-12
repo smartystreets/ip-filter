@@ -108,8 +108,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Go Test.BenchmarkTreeTest in github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestFindIPAddressWithMinMax in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.go test github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestFindIPAddressWithMinMax in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.TestFindNetworkAndNonNetwork in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.TestFindNetworkIPAddress in github.com/smartystreets/ip-filter" />
       </list>
