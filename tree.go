@@ -204,17 +204,6 @@ func (this *treeNode) Search(IPAddress string) bool {
 			firstSection := length + 1
 			var secondSection int
 
-			//for t, x := range indexes {
-			//	if t == 2 {
-			//		secondSection = len(IPAddress)
-			//		break
-			//	}
-			//	if firstSection > x && firstSection < indexes[t+1] {
-			//		secondSection = indexes[t+1]
-			//		break
-			//	}
-			//}
-
 			if length == indexes[2] {
 				secondSection = len(IPAddress)
 			}
@@ -226,8 +215,6 @@ func (this *treeNode) Search(IPAddress string) bool {
 			}
 
 			childRange = IPAddress[firstSection:secondSection]
-
-			//childValue := StringNumberMap[childRange]
 
 			childValue, _ := strconv.ParseUint(childRange, 10, 64)
 
@@ -244,17 +231,6 @@ func (this *treeNode) Search(IPAddress string) bool {
 func findIndexes(IPAddress string) [3]int {
 	var indexes [3]int
 	count := 0
-
-	//for i, _ := range IPAddress {
-	//	if IPAddress[i] == '.' {
-	//		//indexes = append(indexes, i)
-	//		indexes[count] = i
-	//		count++
-	//		if count == 3 {
-	//			break
-	//		}
-	//	}
-	//}
 
 	i := 0
 	for count < 3 {
