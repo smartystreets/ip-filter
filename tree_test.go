@@ -318,6 +318,41 @@ func TestFindIPAddressWithMinMax(t *testing.T) {
 	Assert(t).That(exists).Equals(true)
 }
 
+func TestFindNonExistentNetwork(t *testing.T) {
+	tree := NewTreeNode()
+	Assert(t).That(len(tree.children)).Equals(0)
+
+	tree.Insert("3.144.0.0/13")
+	Assert(t).That(tree.children[0]).Equals(&treeNode{
+		value: "3",
+		children: []*treeNode{
+			{
+				minValue: 144,
+				maxValue: 151,
+			},
+		},
+	})
+	Assert(t).That(len(tree.children)).Equals(1)
+
+	tree.Insert("3.5.140.0/22")
+	Assert(t).That(tree.children[1]).Equals(&treeNode{
+		value: "3.5",
+		children: []*treeNode{
+			{
+				minValue: 140,
+				maxValue: 143,
+			},
+		},
+	})
+	Assert(t).That(len(tree.children)).Equals(2)
+
+	exists := tree.Search("3.152.0.0")
+	Assert(t).That(exists).Equals(false)
+	exists = tree.Search("3.5.144.0")
+	Assert(t).That(exists).Equals(false)
+
+}
+
 func TestFindIPAddressWithoutMinMax(t *testing.T) {
 	tree := NewTreeNode()
 	Assert(t).That(len(tree.children)).Equals(0)
@@ -428,7 +463,7 @@ func (this *Assertion) Equals(expected interface{}) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func BenchmarkTreeTest(b *testing.B) {
-	IpToSearch := "3.5.140.0/22"
+	IpToSearch := "13.108.0.0/14"
 
 	Tree := NewTreeNode()
 
@@ -438,6 +473,7 @@ func BenchmarkTreeTest(b *testing.B) {
 	Tree.Insert("52.95.36.0/22")
 	Tree.Insert("52.94.76.0/22")
 	Tree.Insert("150.222.81.0/24")
+	Tree.Insert("3.108.0.0/14")
 
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
