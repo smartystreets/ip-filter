@@ -22,7 +22,6 @@
     <list default="true" id="bbb00171-3a6e-4c8b-b83f-23a1fa7b3a7a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tree.go" beforeDir="false" afterPath="$PROJECT_DIR$/tree.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tree_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/tree_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,8 +143,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>300</line>
-          <option name="timeStamp" value="133" />
+          <line>178</line>
+          <option name="timeStamp" value="134" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/tree_test.go</url>
+          <line>298</line>
+          <option name="timeStamp" value="135" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/tree.go</url>
+          <line>219</line>
+          <option name="timeStamp" value="136" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
