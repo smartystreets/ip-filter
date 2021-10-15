@@ -22,7 +22,6 @@
     <list default="true" id="bbb00171-3a6e-4c8b-b83f-23a1fa7b3a7a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tree.go" beforeDir="false" afterPath="$PROJECT_DIR$/tree.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tree_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/tree_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +30,33 @@
   </component>
   <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.16.5/libexec" />
   <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="main" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
@@ -51,7 +76,7 @@
     <property name="last_opened_file_path" value="$USER_HOME$" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="Go Test.BenchmarkTreeTest2 in github.com/smartystreets/ip-filter">
+  <component name="RunManager" selected="Go Test.BenchmarkTreeTest in github.com/smartystreets/ip-filter">
     <configuration name="BenchmarkTreeTest in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
@@ -63,18 +88,7 @@
       <pattern value="^\QBenchmarkTreeTest\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="BenchmarkTreeTest2 in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="ip-filter" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="github.com/smartystreets/ip-filter" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gobench" />
-      <pattern value="^\QBenchmarkTreeTest2\E$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestFindIPAddressWithMinMax in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestFindIPAddressWithoutMinMax in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
@@ -82,10 +96,10 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestFindIPAddressWithMinMax\E$" />
+      <pattern value="^\QTestFindIPAddressWithoutMinMax\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestFindNetworkAndNonNetwork in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestFindNonExistentNetwork in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
@@ -93,7 +107,18 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestFindNetworkAndNonNetwork\E$" />
+      <pattern value="^\QTestFindNonExistentNetwork\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestFindWithAndWithOutMinMax in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="ip-filter" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/smartystreets/ip-filter" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestFindWithAndWithOutMinMax\E$" />
       <method v="2" />
     </configuration>
     <configuration name="go test github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -108,11 +133,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.BenchmarkTreeTest2 in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.BenchmarkTreeTest in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.go test github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestFindIPAddressWithMinMax in github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestFindNetworkAndNonNetwork in github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestFindWithAndWithOutMinMax in github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestFindNonExistentNetwork in github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestFindIPAddressWithoutMinMax in github.com/smartystreets/ip-filter" />
       </list>
     </recent_temporary>
   </component>
@@ -145,13 +170,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>178</line>
-          <option name="timeStamp" value="134" />
+          <line>312</line>
+          <option name="timeStamp" value="162" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>298</line>
-          <option name="timeStamp" value="135" />
+          <line>396</line>
+          <option name="timeStamp" value="163" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/tree.go</url>
+          <line>207</line>
+          <option name="timeStamp" value="164" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/tree.go</url>
+          <line>326</line>
+          <option name="timeStamp" value="165" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

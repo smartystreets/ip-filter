@@ -183,6 +183,65 @@ func powInt(x, y int) uint64 {
 }
 
 func (this *treeNode) Search(IPAddress string) bool {
+	//var childRange string
+	//var countOfPeriods int
+	//var fragment string
+	//first := true
+	//for i, _ := range IPAddress {
+	//	if countOfPeriods != 3 {
+	//		if IPAddress[i] != '.' {
+	//			continue
+	//		} else {
+	//			countOfPeriods++
+	//		}
+	//	}
+	//
+	//	if countOfPeriods == 3 && first == true{
+	//		fragment = IPAddress[:i]
+	//		first = false
+	//	} else if countOfPeriods == 3 && first == false{
+	//		fragment = IPAddress
+	//	} else {
+	//		fragment = IPAddress[:i]
+	//	}
+	//
+	//	for _, child := range this.children {
+	//		if child.value != fragment {
+	//			continue
+	//		}
+	//
+	//		if child.children == nil {
+	//			return true
+	//		}
+	//
+	//		var indexOfSecond int
+	//
+	//
+	//		if countOfPeriods == 3 && first == true{
+	//			childRange = IPAddress[(len(fragment)+1):]
+	//		} else if countOfPeriods == 3 && first != true{
+	//			childRange = IPAddress[(len(fragment)+1):]
+	//		} else {
+	//			count := i
+	//			for _, _ = range IPAddress {
+	//				count++
+	//				if IPAddress[count] == '.' {
+	//					indexOfSecond = count
+	//					break
+	//				}
+	//			}
+	//			childRange = IPAddress[(len(fragment) + 1):indexOfSecond]
+	//		}
+	//
+	//		changeableRange, _ := strconv.ParseUint(childRange, 10, 64)
+	//
+	//		for _, child2 := range child.children {
+	//			if changeableRange >= child2.minValue && changeableRange <= child2.maxValue {
+	//				return true
+	//			}
+	//		}
+	//	}
+	//}
 	var childRange string
 	var fragment string
 
@@ -234,10 +293,38 @@ func (this *treeNode) Search(IPAddress string) bool {
 	return false
 }
 
+func (this *treeNode) Search2(IpAddress string, secondChildSearch bool) bool {
+	for _, child := range this.children {
+		if IpAddress != child.value {
+			continue
+		}
+		if child.children == nil {
+			return true
+		}
+
+		//if countOfPeriods == 3 && first == true{
+		//			childRange = IPAddress[(len(fragment)+1):]
+		//		} else if countOfPeriods == 3 && first != true{
+		//			childRange = IPAddress[(len(fragment)+1):]
+		//		} else {
+		//			count := i
+		//			for _, _ = range IPAddress {
+		//				count++
+		//				if IPAddress[count] == '.' {
+		//					indexOfSecond = count
+		//					break
+		//				}
+		//			}
+		//			childRange = IPAddress[(len(fragment) + 1):indexOfSecond]
+		//		}
+	}
+
+	return false
+}
+
 func findIndexes(IPAddress string) [3]int {
 	var indexes [3]int
 	count := 0
-
 	i := 0
 	for count < 3 {
 		if IPAddress[i] == '.' {
