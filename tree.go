@@ -14,12 +14,18 @@ type treeNode struct {
 	children []*treeNode
 }
 
-func NewTreeNode() *treeNode {
+func TreeNode() *treeNode {
 	return &treeNode{
 		value:    "",
 		minValue: 0,
 		maxValue: 0,
 		children: nil,
+	}
+}
+
+func (this *treeNode) New(addresses []string) {
+	for _, item := range addresses {
+		this.Insert(item)
 	}
 }
 
