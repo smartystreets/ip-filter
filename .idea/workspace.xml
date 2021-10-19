@@ -180,12 +180,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree.go</url>
-          <line>207</line>
+          <line>211</line>
           <option name="timeStamp" value="164" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree.go</url>
-          <line>326</line>
+          <line>300</line>
           <option name="timeStamp" value="165" />
         </line-breakpoint>
       </breakpoints>

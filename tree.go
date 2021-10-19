@@ -115,6 +115,10 @@ func (this *treeNode) Insert(IPAddress string) error {
 	return nil
 }
 
+func (this *treeNode) Insert2(IpAddress string) {
+
+}
+
 func (this *treeNode) addNetworkChild(maxValue, minValue uint64, IPFragment string) error {
 
 	for _, children := range this.children {
@@ -290,35 +294,6 @@ func (this *treeNode) Search(IPAddress string) bool {
 			}
 		}
 	}
-	return false
-}
-
-func (this *treeNode) Search2(IpAddress string, secondChildSearch bool) bool {
-	for _, child := range this.children {
-		if IpAddress != child.value {
-			continue
-		}
-		if child.children == nil {
-			return true
-		}
-
-		//if countOfPeriods == 3 && first == true{
-		//			childRange = IPAddress[(len(fragment)+1):]
-		//		} else if countOfPeriods == 3 && first != true{
-		//			childRange = IPAddress[(len(fragment)+1):]
-		//		} else {
-		//			count := i
-		//			for _, _ = range IPAddress {
-		//				count++
-		//				if IPAddress[count] == '.' {
-		//					indexOfSecond = count
-		//					break
-		//				}
-		//			}
-		//			childRange = IPAddress[(len(fragment) + 1):indexOfSecond]
-		//		}
-	}
-
 	return false
 }
 
