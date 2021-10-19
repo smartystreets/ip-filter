@@ -115,10 +115,6 @@ func (this *treeNode) Insert(IPAddress string) error {
 	return nil
 }
 
-func (this *treeNode) Insert2(IpAddress string) {
-
-}
-
 func (this *treeNode) addNetworkChild(maxValue, minValue uint64, IPFragment string) error {
 
 	for _, children := range this.children {

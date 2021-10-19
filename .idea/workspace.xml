@@ -20,7 +20,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bbb00171-3a6e-4c8b-b83f-23a1fa7b3a7a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tree.go" beforeDir="false" afterPath="$PROJECT_DIR$/tree.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -180,12 +179,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree.go</url>
-          <line>211</line>
+          <line>207</line>
           <option name="timeStamp" value="164" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree.go</url>
-          <line>300</line>
+          <line>296</line>
           <option name="timeStamp" value="165" />
         </line-breakpoint>
       </breakpoints>
