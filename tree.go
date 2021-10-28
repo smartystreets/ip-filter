@@ -9,16 +9,12 @@ import (
 
 type treeNode struct {
 	value    uint64
-	minValue uint64
-	maxValue uint64
 	children []*treeNode
 }
 
 func TreeNode() *treeNode {
 	return &treeNode{
 		value:    0,
-		minValue: 0,
-		maxValue: 0,
 		children: nil,
 	}
 }
@@ -30,7 +26,11 @@ func (this *treeNode) New(addresses []string) {
 }
 
 func (this *treeNode) Insert(ipAddress string) error {
+	if len(ipAddress) == 0 {
+		return ErrInvalidIPAddress
+	}
 	var last bool
+	var network bool
 	var numOfNodes int
 	position := strings.Index(ipAddress, "/")
 	subnetBits, _ := strconv.Atoi(ipAddress[position+1:])
@@ -44,41 +44,54 @@ func (this *treeNode) Insert(ipAddress string) error {
 
 	if subnetBits >= 8 && subnetBits <= 15 {
 		if subnetBits == 8 {
-			last = false
+			last = true
+			network = true
 			numOfNodes = 1
 			ipAddress = ipAddress[:indexes[0]]
-			this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last)
+			this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last, network)
+			return nil
 		}
 		numOfNodes = 2
 		ipAddress = ipAddress[:indexes[1]]
-		this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last)
+		this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last, network)
+		return nil
 	}
 	if subnetBits >= 16 && subnetBits <= 23 {
 		if subnetBits == 16 {
+			network = true
 			numOfNodes = 2
 			ipAddress = ipAddress[:indexes[1]]
+			this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last, network)
+			return nil
 		}
 		numOfNodes = 3
 		ipAddress = ipAddress[:indexes[2]]
-		this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last)
+		this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last, network)
+		return nil
 	}
 	if subnetBits >= 24 && subnetBits <= 31 {
 		if subnetBits == 24 {
+			network = true
 			numOfNodes = 3
 			ipAddress = ipAddress[:indexes[2]]
+			this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last, network)
+			return nil
 		}
 		numOfNodes = 4
-		this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last)
+		this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last, network)
+		return nil
 	}
 	if subnetBits == 32 {
 		numOfNodes = 4
-		this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last)
+		network = true
+		this.addNetworkChild(numOfNodes, subnetBits, ipAddress, last, network)
+		return nil
 	}
 	return nil
 }
 
-func (this *treeNode) addNetworkChild(numOfNodes, subnetBits int, ipAddress string, last bool) error {
-	if numOfNodes == 1 && last == false{
+func (this *treeNode) addNetworkChild(numOfNodes, subnetBits int, ipAddress string, last, network bool) error {
+	if numOfNodes == 1 && last == true && network == true {
 		childFragment, _ := strconv.ParseUint(ipAddress, 10, 64)
 		for _, children := range this.children {
 			if children.value == childFragment {
@@ -87,107 +100,88 @@ func (this *treeNode) addNetworkChild(numOfNodes, subnetBits int, ipAddress stri
 		}
 
 		child := &treeNode{
+			value:    childFragment,
 			children: nil,
 		}
 
 		this.children = append(this.children, child)
 		return nil
 	}
-	//I may have to do this for the min max children
-	if numOfNodes == 1 && last == true{
+
+	if numOfNodes == 1 && last == true && network == false {
 		childFragment, _ := strconv.ParseUint(ipAddress, 10, 64)
 		this.addMinMaxChild(childFragment, subnetBits)
+		return nil
 	}
 
-	//TODO: I also don't believe that I should have this numOfNodes... maybe try and do range of ipAddress
 	for i := range ipAddress {
 		if ipAddress[i] == '.' {
 			childFragment, _ := strconv.ParseUint(ipAddress[:i], 10, 64)
+
 			ipAddress = ipAddress[i+1:]
-			for _, children := range this.children {
-				if children.value == childFragment {
+
+			for _, child := range this.children {
+				if child.value == childFragment {
 					return nil
 				}
 			}
 
 			child := &treeNode{
-				children: nil,
+				value: childFragment,
 			}
-
 			this.children = append(this.children, child)
-			//We need a way to check if this is the last one to add... then we can change the bool "last"
+
 			numOfNodes--
 			if numOfNodes == 1 {
 				last = true
 			}
-			child.addNetworkChild(numOfNodes, subnetBits, ipAddress, last)
-		}
-	}
-
-	for _, child := range this.children {
-		if child.value != ipFragment {
-			continue
-		}
-	}
-
-	for _, children := range this.children {
-		if children.value == IPFragment {
-			for _, childrenRanges := range children.children {
-				if childrenRanges.minValue == minValue && childrenRanges.maxValue == maxValue {
-					return nil
-				}
-				children.addMinMaxChild(maxValue, minValue)
-				return nil
-			}
-		}
-	}
-
-	child := &treeNode{
-		value:    IPFragment,
-		children: nil,
-	}
-
-	this.children = append(this.children, child)
-
-	if maxValue == 0 {
-		return nil
-	}
-
-	child.addMinMaxChild(maxValue, minValue)
-	return nil
-}
-func (this *treeNode) addMinMaxChild(minValue uint64, subnetBits int) error {
-
-	//if subnetBits > 8 && subnetBits < 16 {
-	//firstSection := strings.Index(IPAddress, ".")
-	//secondSection := findIndex(IPAddress, 16)
-	//
-	//minValue, _ := strconv.ParseUint(IPAddress[firstSection+1:secondSection], 10, 64)
-	//
-	//changeableBits := 16 - subnetBits
-	//
-	//valueToAdd := powInt(2, changeableBits) - 1
-	//
-	//maxValue := minValue + valueToAdd
-	//
-	//IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
-	//
-	//this.addNetworkChild(maxValue, minValue, IPFragment)
-
-
-	for _, children := range this.children {
-		if children.minValue == minValue && children.maxValue == maxValue {
+			child.addNetworkChild(numOfNodes, subnetBits, ipAddress, last, network)
 			return nil
 		}
 	}
+	return nil
+}
 
-	child := &treeNode{
-		minValue: minValue,
-		maxValue: maxValue,
-		children: nil,
+func (this *treeNode) addMinMaxChild(minValue uint64, subnetBits int) error {
+	var maxValue uint64
+
+	if subnetBits > 8 && subnetBits < 16 {
+		changeableBits := 16 - subnetBits
+
+		valueToAdd := powInt(2, changeableBits) - 1
+
+		maxValue = minValue + valueToAdd
+	}
+	if subnetBits > 16 && subnetBits < 24 {
+		changeableBits := 24 - subnetBits
+
+		valueToAdd := powInt(2, changeableBits) - 1
+
+		maxValue = minValue + valueToAdd
+	}
+	if subnetBits > 24 && subnetBits < 32 {
+		changeableBits := 32 - subnetBits
+
+		valueToAdd := powInt(2, changeableBits) - 1
+
+		maxValue = minValue + valueToAdd
 	}
 
-	this.children = append(this.children, child)
+	for i := minValue; i <= maxValue; i++ {
+
+		for _, child := range this.children {
+			if child.value == i {
+				return nil
+			}
+		}
+
+		child := &treeNode{
+			value:    i,
+			children: nil,
+		}
+
+		this.children = append(this.children, child)
+	}
 	return nil
 }
 
