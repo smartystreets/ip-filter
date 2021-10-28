@@ -8,7 +8,7 @@ import (
 )
 
 type treeNode struct {
-	value    string
+	value    uint64
 	minValue uint64
 	maxValue uint64
 	children []*treeNode
@@ -16,7 +16,7 @@ type treeNode struct {
 
 func TreeNode() *treeNode {
 	return &treeNode{
-		value:    "",
+		value:    0,
 		minValue: 0,
 		maxValue: 0,
 		children: nil,
@@ -30,10 +30,8 @@ func (this *treeNode) New(addresses []string) {
 }
 
 func (this *treeNode) Insert(ipAddress string) error {
-	//TODO: I think you need to take the subnetBits out of it... just add every possibility to the tree
-	// however, you will need to know the subnetBits to do the math to find the ranges
-	var cRange bool
-	var ipFragment uint64
+	var last bool
+	var numOfNodes int
 	position := strings.Index(ipAddress, "/")
 	subnetBits, _ := strconv.Atoi(ipAddress[position+1:])
 	ipAddress = ipAddress[:position]
@@ -41,164 +39,138 @@ func (this *treeNode) Insert(ipAddress string) error {
 	if subnetBits > 32 {
 		return ErrInvalidIPAddress
 	}
+
 	indexes := findIndexes(ipAddress)
 
-	if subnetBits > 7 && subnetBits < 16 {
+	if subnetBits >= 8 && subnetBits <= 15 {
 		if subnetBits == 8 {
-			cRange = true
+			last = false
+			numOfNodes = 1
+			ipAddress = ipAddress[:indexes[0]]
+			this.addNetworkChild(numOfNodes, ipAddress, last)
 		}
-		ipFragment,_ := strconv.ParseUint(ipAddress[:indexes[0]], 10, 64)
+		numOfNodes = 2
+		ipAddress = ipAddress[:indexes[1]]
+		this.addNetworkChild(numOfNodes, ipAddress, last)
 	}
-	if subnetBits > 15 && subnetBits < 24 {
+	if subnetBits >= 16 && subnetBits <= 23 {
 		if subnetBits == 16 {
-			cRange = true
+			numOfNodes = 2
+			ipAddress = ipAddress[:indexes[1]]
 		}
-		ipFragment,_ := strconv.ParseUint(ipAddress[:indexes[0]], 10, 64)
+		numOfNodes = 3
+		ipAddress = ipAddress[:indexes[2]]
+		this.addNetworkChild(numOfNodes, ipAddress, last)
 	}
-	if subnetBits > 23 && subnetBits < 32 {
+	if subnetBits >= 24 && subnetBits <= 31 {
 		if subnetBits == 24 {
-			cRange = true
+			numOfNodes = 3
+			ipAddress = ipAddress[:indexes[2]]
 		}
-		ipFragment,_ := strconv.ParseUint(ipAddress[:indexes[0]], 10, 64)
+		numOfNodes = 4
+		this.addNetworkChild(numOfNodes, ipAddress, last)
 	}
 	if subnetBits == 32 {
-		cRange == true
-		ipFragment,_ := strconv.ParseUint(ipAddress[:indexes[0]], 10, 64)
+		numOfNodes = 4
+		this.addNetworkChild(numOfNodes, ipAddress, last)
+	}
+	return nil
+}
+
+func (this *treeNode) addNetworkChild(numOfNodes int, ipAddress string, last bool) error {
+	if numOfNodes == 1 && last == false{
+		childFragment, _ := strconv.ParseUint(ipAddress, 10, 64)
+		for _, children := range this.children {
+			if children.value == childFragment {
+				return nil
+			}
+		}
+
+		child := &treeNode{
+			children: nil,
+		}
+
+		this.children = append(this.children, child)
+		return nil
+	}
+	//I may have to do this for the min max children
+	if numOfNodes == 1 && last == true{
+		childFragment, _ := strconv.ParseUint(ipAddress, 10, 64)
+
+		this.addMinMaxChild()
 	}
 
-	for _, child := range this.children{
-		if child.value != ipFragment{
+	//TODO: I also don't believe that I should have this numOfNodes... maybe try and do range of ipAddress
+	for i := range ipAddress {
+		if ipAddress[i] == '.' {
+			childFragment, _ := strconv.ParseUint(ipAddress[:i], 10, 64)
+			ipAddress = ipAddress[i+1:]
+			for _, children := range this.children {
+				if children.value == childFragment {
+					return nil
+				}
+			}
+
+			child := &treeNode{
+				children: nil,
+			}
+
+			this.children = append(this.children, child)
+			//We need a way to check if this is the last one to add... then we can change the bool "last"
+			numOfNodes--
+			if numOfNodes == 1 {
+				last = true
+			}
+			child.addNetworkChild(numOfNodes, ipAddress, last)
+		}
+	}
+
+	for _, child := range this.children {
+		if child.value != ipFragment {
 			continue
 		}
 	}
-	//if len(IPAddress) == 0 {
-	//	return ErrInvalidIPAddress
-	//}
-	//
-	//var IPFragment string
-	//if position := strings.Index(IPAddress, "/"); position != -1 {
-	//
-	//	subnetBits, _ := strconv.Atoi(IPAddress[position+1:])
-	//
-	//	if subnetBits == 8 {
-	//		IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
-	//		this.addNetworkChild(0, 0, IPFragment)
-	//		return nil
-	//	}
-	//	if subnetBits == 16 {
-	//		index := findIndex(IPAddress, 16)
-	//		IPFragment = IPAddress[:index]
-	//		this.addNetworkChild(0, 0, IPFragment)
-	//		return nil
-	//	}
-	//	if subnetBits == 24 {
-	//		index := findIndex(IPAddress, 24)
-	//		IPFragment = IPAddress[:index]
-	//		this.addNetworkChild(0, 0, IPFragment)
-	//		return nil
-	//	}
-	//	if subnetBits == 32 {
-	//		IPFragment = IPAddress[:position]
-	//		this.addNetworkChild(0, 0, IPFragment)
-	//		return nil
-	//	}
-	//	IPAddress = IPAddress[:position]
-	//
-	//	if subnetBits > 8 && subnetBits < 16 {
-	//		firstSection := strings.Index(IPAddress, ".")
-	//		secondSection := findIndex(IPAddress, 16)
-	//
-	//		minValue, _ := strconv.ParseUint(IPAddress[firstSection+1:secondSection], 10, 64)
-	//
-	//		changeableBits := 16 - subnetBits
-	//
-	//		valueToAdd := powInt(2, changeableBits) - 1
-	//
-	//		maxValue := minValue + valueToAdd
-	//
-	//		IPFragment = IPAddress[:strings.Index(IPAddress, ".")]
-	//
-	//		this.addNetworkChild(maxValue, minValue, IPFragment)
-	//		return nil
-	//	}
-	//	if subnetBits > 16 && subnetBits < 24 {
-	//		firstSection := findIndex(IPAddress, 16)
-	//		secondSection := findIndex(IPAddress, 24)
-	//		minValue, _ := strconv.ParseUint(IPAddress[firstSection+1:secondSection], 10, 64)
-	//
-	//		changeableBits := 24 - subnetBits
-	//
-	//		valueToAdd := powInt(2, changeableBits) - 1
-	//
-	//		maxValue := minValue + valueToAdd
-	//
-	//		IPFragment = IPAddress[:findIndex(IPAddress, 16)]
-	//
-	//		this.addNetworkChild(maxValue, minValue, IPFragment)
-	//		return nil
-	//	}
-	//	if subnetBits > 24 && subnetBits < 32 {
-	//		minValue, _ := strconv.ParseUint(IPAddress[findIndex(IPAddress, 24)+1:], 10, 64)
-	//
-	//		changeableBits := 32 - subnetBits
-	//
-	//		valueToAdd := powInt(2, changeableBits) - 1
-	//
-	//		maxValue := minValue + valueToAdd
-	//
-	//		IPFragment = IPAddress[:findIndex(IPAddress, 24)]
-	//
-	//		this.addNetworkChild(maxValue, minValue, IPFragment)
-	//		return nil
-	//	}
-	//
-	//}
-	//return nil
-	return nil
-}
 
-func (this *treeNode) addNetworkChild(maxValue, minValue uint64, IPFragment string) error {
-	//
-	//for _, children := range this.children {
-	//	if children.value == IPFragment {
-	//		for _, childrenRanges := range children.children {
-	//			if childrenRanges.minValue == minValue && childrenRanges.maxValue == maxValue {
-	//				return nil
-	//			}
-	//			children.addMinMaxChild(maxValue, minValue)
-	//			return nil
-	//		}
-	//	}
-	//}
-	//
-	//child := &treeNode{
-	//	value:    IPFragment,
-	//	children: nil,
-	//}
-	//
-	//this.children = append(this.children, child)
-	//
-	//if maxValue == 0 {
-	//	return nil
-	//}
-	//
-	//child.addMinMaxChild(maxValue, minValue)
+	for _, children := range this.children {
+		if children.value == IPFragment {
+			for _, childrenRanges := range children.children {
+				if childrenRanges.minValue == minValue && childrenRanges.maxValue == maxValue {
+					return nil
+				}
+				children.addMinMaxChild(maxValue, minValue)
+				return nil
+			}
+		}
+	}
+
+	child := &treeNode{
+		value:    IPFragment,
+		children: nil,
+	}
+
+	this.children = append(this.children, child)
+
+	if maxValue == 0 {
+		return nil
+	}
+
+	child.addMinMaxChild(maxValue, minValue)
 	return nil
 }
 func (this *treeNode) addMinMaxChild(maxValue, minValue uint64) error {
-	//for _, children := range this.children {
-	//	if children.minValue == minValue && children.maxValue == maxValue {
-	//		return nil
-	//	}
-	//}
-	//
-	//child := &treeNode{
-	//	minValue: minValue,
-	//	maxValue: maxValue,
-	//	children: nil,
-	//}
-	//
-	//this.children = append(this.children, child)
+	for _, children := range this.children {
+		if children.minValue == minValue && children.maxValue == maxValue {
+			return nil
+		}
+	}
+
+	child := &treeNode{
+		minValue: minValue,
+		maxValue: maxValue,
+		children: nil,
+	}
+
+	this.children = append(this.children, child)
 	return nil
 }
 
