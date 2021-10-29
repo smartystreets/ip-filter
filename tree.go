@@ -10,12 +10,14 @@ import (
 type treeNode struct {
 	value    uint64
 	children []*treeNode
+	end      bool
 }
 
 func TreeNode() *treeNode {
 	return &treeNode{
 		value:    0,
 		children: nil,
+		end:      false,
 	}
 }
 
@@ -102,6 +104,7 @@ func (this *treeNode) addNetworkChild(numOfNodes, subnetBits int, ipAddress stri
 		child := &treeNode{
 			value:    childFragment,
 			children: nil,
+			end:      true,
 		}
 
 		this.children = append(this.children, child)
@@ -122,6 +125,11 @@ func (this *treeNode) addNetworkChild(numOfNodes, subnetBits int, ipAddress stri
 
 			for _, child := range this.children {
 				if child.value == childFragment {
+					numOfNodes--
+					if numOfNodes == 1 {
+						last = true
+					}
+					child.addNetworkChild(numOfNodes, subnetBits, ipAddress, last, network)
 					return nil
 				}
 			}
@@ -178,6 +186,7 @@ func (this *treeNode) addMinMaxChild(minValue uint64, subnetBits int) error {
 		child := &treeNode{
 			value:    i,
 			children: nil,
+			end:      true,
 		}
 
 		this.children = append(this.children, child)
@@ -205,67 +214,33 @@ func powInt(x, y int) uint64 {
 	return uint64(math.Pow(float64(x), float64(y)))
 }
 
-func (this *treeNode) Search(IPAddress string) bool {
-	//var childRange string
-	//var countOfPeriods int
-	//var fragment string
-	//first := true
-	//for i, _ := range IPAddress {
-	//	if countOfPeriods != 3 {
-	//		if IPAddress[i] != '.' {
-	//			continue
-	//		} else {
-	//			countOfPeriods++
-	//		}
-	//	}
-	//
-	//	if countOfPeriods == 3 && first == true{
-	//		fragment = IPAddress[:i]
-	//		first = false
-	//	} else if countOfPeriods == 3 && first == false{
-	//		fragment = IPAddress
-	//	} else {
-	//		fragment = IPAddress[:i]
-	//	}
-	//
-	//	for _, child := range this.children {
-	//		if child.value != fragment {
-	//			continue
-	//		}
-	//
-	//		if child.children == nil {
-	//			return true
-	//		}
-	//
-	//		var indexOfSecond int
-	//
-	//
-	//		if countOfPeriods == 3 && first == true{
-	//			childRange = IPAddress[(len(fragment)+1):]
-	//		} else if countOfPeriods == 3 && first != true{
-	//			childRange = IPAddress[(len(fragment)+1):]
-	//		} else {
-	//			count := i
-	//			for _, _ = range IPAddress {
-	//				count++
-	//				if IPAddress[count] == '.' {
-	//					indexOfSecond = count
-	//					break
-	//				}
-	//			}
-	//			childRange = IPAddress[(len(fragment) + 1):indexOfSecond]
-	//		}
-	//
-	//		changeableRange, _ := strconv.ParseUint(childRange, 10, 64)
-	//
-	//		for _, child2 := range child.children {
-	//			if changeableRange >= child2.minValue && changeableRange <= child2.maxValue {
-	//				return true
-	//			}
-	//		}
-	//	}
-	//}
-	return false
+func (this *treeNode) Search(ipAddress string) (bool, error) {
+	var fragment uint64
+
+	index := findIndex2(ipAddress)
+	if index == 0 {
+		fragment, _ = strconv.ParseUint(ipAddress, 10, 64)
+	} else {
+		fragment, _ = strconv.ParseUint(ipAddress[:index], 10, 64)
+	}
+
+	for _, child := range this.children {
+		if child.value != fragment {
+			continue
+		}
+
+		if child.end == true {
+			return true, nil
+		}
+
+		ipAddress = ipAddress[index+1:]
+
+		if exists, err := child.Search(ipAddress); err == nil && exists {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func findIndexes(IPAddress string) [3]int {
@@ -280,4 +255,13 @@ func findIndexes(IPAddress string) [3]int {
 		i++
 	}
 	return indexes
+}
+
+func findIndex2(ipAddress string) int {
+	for i := range ipAddress {
+		if ipAddress[i] == '.' {
+			return i
+		}
+	}
+	return 0
 }

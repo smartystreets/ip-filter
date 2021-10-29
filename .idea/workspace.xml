@@ -46,7 +46,7 @@
     </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="caroline-insert-2" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -77,7 +77,7 @@
     <property name="last_opened_file_path" value="$USER_HOME$" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="Go Test.TestNonNetworks in github.com/smartystreets/ip-filter">
+  <component name="RunManager" selected="Go Test.BenchmarkTreeTest in github.com/smartystreets/ip-filter">
     <configuration name="BenchmarkTreeTest in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
@@ -89,7 +89,7 @@
       <pattern value="^\QBenchmarkTreeTest\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestErrors in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestFindIPAddressWithMinMax in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
@@ -97,7 +97,7 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestErrors\E$" />
+      <pattern value="^\QTestFindIPAddressWithMinMax\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestNetworks in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -134,11 +134,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestNonNetworks in github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestNetworks in github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestErrors in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.BenchmarkTreeTest in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.go test github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestFindIPAddressWithMinMax in github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestNetworks in github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestNonNetworks in github.com/smartystreets/ip-filter" />
       </list>
     </recent_temporary>
   </component>
@@ -165,30 +165,26 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/tree.go</url>
-          <line>220</line>
-          <option name="timeStamp" value="164" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/tree.go</url>
-          <line>261</line>
-          <option name="timeStamp" value="165" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>29</line>
+          <line>31</line>
           <option name="timeStamp" value="234" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>79</line>
+          <line>83</line>
           <option name="timeStamp" value="239" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/tree_test.go</url>
+          <line>280</line>
+          <option name="timeStamp" value="251" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ip_filter$TestNetworkAndNonNetworkChildrenAdded_in_github_com_smartystreets_ip_filter.out" NAME="TestNetworkAndNonNetworkChildrenAdded in github.com/smartystreets/ip-filter Coverage Results" MODIFIED="1634842456689" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/ip_filter$TestFindIPAddressWithMinMax_in_github_com_smartystreets_ip_filter.out" NAME="TestFindIPAddressWithMinMax in github.com/smartystreets/ip-filter Coverage Results" MODIFIED="1635461513871" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/ip_filter$TestFindNetworkAndNonNetwork_in_github_com_smartystreets_ip_filter.out" NAME="TestFindNetworkAndNonNetwork in github.com/smartystreets/ip-filter Coverage Results" MODIFIED="1633639827513" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/ip_filter$TestNetworks_in_github_com_smartystreets_ip_filter.out" NAME="TestNetworks in github.com/smartystreets/ip-filter Coverage Results" MODIFIED="1635282567564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
