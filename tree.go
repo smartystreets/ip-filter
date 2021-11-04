@@ -9,15 +9,19 @@ import (
 
 type treeNode struct {
 	value    uint64
-	children []*treeNode
 	end      bool
+	min      uint64
+	max      uint64
+	children []*treeNode
 }
 
 func TreeNode() *treeNode {
 	return &treeNode{
 		value:    0,
-		children: nil,
 		end:      false,
+		min:      0,
+		max:      0,
+		children: nil,
 	}
 }
 
@@ -94,7 +98,7 @@ func (this *treeNode) Insert(ipAddress string) error {
 
 func (this *treeNode) addNetworkChild(numOfNodes, subnetBits int, ipAddress string, last, network bool) error {
 	if numOfNodes == 1 && last == true && network == true {
-		childFragment, _ := strconv.ParseUint(ipAddress, 10, 64)
+		childFragment, _ := strconv.ParseUint(ipAddress, 10, 8)
 		for _, children := range this.children {
 			if children.value == childFragment {
 				return nil
@@ -105,6 +109,8 @@ func (this *treeNode) addNetworkChild(numOfNodes, subnetBits int, ipAddress stri
 			value:    childFragment,
 			children: nil,
 			end:      true,
+			min:      childFragment,
+			max:      childFragment,
 		}
 
 		this.children = append(this.children, child)
@@ -175,39 +181,22 @@ func (this *treeNode) addMinMaxChild(minValue uint64, subnetBits int) error {
 		maxValue = minValue + valueToAdd
 	}
 
-	for i := minValue; i <= maxValue; i++ {
-
-		for _, child := range this.children {
-			if child.value == i {
-				return nil
-			}
+	for _, child := range this.children {
+		if child.min <= minValue && child.max >= maxValue {
+			return nil
 		}
-
-		child := &treeNode{
-			value:    i,
-			children: nil,
-			end:      true,
-		}
-
-		this.children = append(this.children, child)
 	}
+
+	child := &treeNode{
+		min:      minValue,
+		max:      maxValue,
+		children: nil,
+		end:      true,
+	}
+
+	this.children = append(this.children, child)
+
 	return nil
-}
-
-func findIndex(IPAddress string, position int) int {
-	var count int
-	for i := range IPAddress {
-		if IPAddress[i] == '.' {
-			count++
-		}
-		if count == 2 && position == 16 {
-			return i
-		}
-		if count == 3 && position == 24 {
-			return i
-		}
-	}
-	return -1
 }
 
 func powInt(x, y int) uint64 {
@@ -216,8 +205,16 @@ func powInt(x, y int) uint64 {
 
 func (this *treeNode) Search(ipAddress string) (bool, error) {
 	var fragment uint64
+	var index int
 
-	index := findIndex2(ipAddress)
+	for i := range ipAddress {
+		if ipAddress[i] == '.' {
+			index = i
+			break
+		}
+		index = 0
+	}
+
 	if index == 0 {
 		fragment, _ = strconv.ParseUint(ipAddress, 10, 64)
 	} else {
@@ -225,12 +222,16 @@ func (this *treeNode) Search(ipAddress string) (bool, error) {
 	}
 
 	for _, child := range this.children {
-		if child.value != fragment {
+
+		if child.end == true {
+			if child.min <= fragment && child.max >= fragment {
+				return true, nil
+			}
 			continue
 		}
 
-		if child.end == true {
-			return true, nil
+		if child.value != fragment {
+			continue
 		}
 
 		ipAddress = ipAddress[index+1:]
