@@ -21,7 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="bbb00171-3a6e-4c8b-b83f-23a1fa7b3a7a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/makefile" beforeDir="false" afterPath="$PROJECT_DIR$/makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tree.go" beforeDir="false" afterPath="$PROJECT_DIR$/tree.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tree_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/tree_test.go" afterDir="false" />
     </list>
@@ -47,7 +46,7 @@
     </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="caroline-insert-2" />
+        <entry key="$PROJECT_DIR$" value="wide-tree" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -112,7 +111,7 @@
       <pattern value="^\QTestFindIPAddressWithoutMinMax\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestNetworkAndNonNetworkChildrenAdded in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestTree in github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="ip-filter" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
@@ -120,7 +119,7 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestNetworkAndNonNetworkChildrenAdded\E$" />
+      <pattern value="^\QTestTree\E$" />
       <method v="2" />
     </configuration>
     <configuration name="go test github.com/smartystreets/ip-filter" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -136,10 +135,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Go Test.BenchmarkTreeTest in github.com/smartystreets/ip-filter" />
+        <item itemvalue="Go Test.TestTree in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.go test github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.TestFindIPAddressWithoutMinMax in github.com/smartystreets/ip-filter" />
         <item itemvalue="Go Test.TestFindIPAddressWithMinMax in github.com/smartystreets/ip-filter" />
-        <item itemvalue="Go Test.TestNetworkAndNonNetworkChildrenAdded in github.com/smartystreets/ip-filter" />
       </list>
     </recent_temporary>
   </component>
@@ -172,13 +171,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>247</line>
+          <line>286</line>
           <option name="timeStamp" value="256" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/tree_test.go</url>
-          <line>287</line>
+          <line>326</line>
           <option name="timeStamp" value="258" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/tree_test.go</url>
+          <line>203</line>
+          <option name="timeStamp" value="264" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

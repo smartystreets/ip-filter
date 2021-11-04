@@ -5,235 +5,190 @@ import (
 	"testing"
 )
 
-func TestNetworks(t *testing.T) {
-	tree := TreeNode()
-	Assert(t).That(len(tree.children)).Equals(0)
+//func TestNetworks(t *testing.T) {
+//	tree := TreeNode()
+//	Assert(t).That(len(tree.children)).Equals(0)
+//
+//	tree.Insert(IPNetwork8) //"10.0.0.0/8"
+//	Assert(t).That(tree.children[0]).Equals(&treeNode{
+//		value:    10,
+//		children: nil,
+//		end:      true,
+//		min:      10,
+//		max:      10,
+//	})
+//	Assert(t).That(len(tree.children)).Equals(1)
+//
+//	tree.Insert(IPNetwork16) //"54.168.0.0/16"
+//	Assert(t).That(tree.children[1]).Equals(&treeNode{
+//		value: 54,
+//		children: []*treeNode{
+//			{
+//				value:    168,
+//				children: nil,
+//				end:      true,
+//				min:      168,
+//				max:      168,
+//			},
+//		},
+//	})
+//	Assert(t).That(len(tree.children)).Equals(2)
+//	Assert(t).That(len(tree.children[1].children)).Equals(1)
+//
+//	tree.Insert(IPNetwork24) //"150.222.10.0/24"
+//	Assert(t).That(tree.children[2]).Equals(&treeNode{
+//		value: 150,
+//		children: []*treeNode{
+//			{
+//				value: 222,
+//				children: []*treeNode{
+//					{
+//						value: 10,
+//						end:   true,
+//						min:   10,
+//						max:   10,
+//					},
+//				},
+//			},
+//		},
+//	})
+//	Assert(t).That(len(tree.children)).Equals(3)
+//	Assert(t).That(len(tree.children[2].children)).Equals(1)
+//	Assert(t).That(len(tree.children[2].children[0].children)).Equals(1)
+//
+//	tree.Insert(IPNetwork32) //"52.93.126.244/32"
+//	Assert(t).That(tree.children[3]).Equals(&treeNode{
+//		value: 52,
+//		children: []*treeNode{
+//			{
+//				value: 93,
+//				children: []*treeNode{
+//					{
+//						value: 126,
+//						children: []*treeNode{
+//							{
+//								value: 244,
+//								end:   true,
+//								min:   244,
+//								max:   244,
+//							},
+//						},
+//					},
+//				},
+//			},
+//		},
+//	})
+//	Assert(t).That(len(tree.children)).Equals(4)
+//	Assert(t).That(len(tree.children[3].children)).Equals(1)
+//	Assert(t).That(len(tree.children[3].children[0].children)).Equals(1)
+//	Assert(t).That(len(tree.children[3].children[0].children[0].children)).Equals(1)
+//}
+//
+//func TestNonNetworks(t *testing.T) {
+//	tree := TreeNode()
+//	Assert(t).That(len(tree.children)).Equals(0)
+//
+//	tree.Insert("43.224.79.174/31")
+//	Assert(t).That(tree.children[0]).Equals(&treeNode{
+//		value: 43,
+//		children: []*treeNode{
+//			{
+//				value: 224,
+//				children: []*treeNode{
+//					{
+//						value: 79,
+//						children: []*treeNode{
+//							{
+//								min: 174,
+//								max: 175,
+//								end: true,
+//							},
+//						},
+//					},
+//				},
+//			},
+//		},
+//	})
+//	Assert(t).That(len(tree.children)).Equals(1)
+//
+//	tree.Insert("69.107.7.16/29")
+//	Assert(t).That(tree.children[1]).Equals(&treeNode{
+//		value: 69,
+//		children: []*treeNode{
+//			{
+//				value: 107,
+//				children: []*treeNode{
+//					{
+//						value: 7,
+//						children: []*treeNode{
+//							{
+//								min: 16,
+//								max: 23,
+//								end: true,
+//							},
+//						},
+//					},
+//				},
+//			},
+//		},
+//	})
+//	Assert(t).That(len(tree.children)).Equals(2)
+//}
+//
+//func TestChildAlreadyAdded(t *testing.T) {
+//	tree := TreeNode()
+//	Assert(t).That(len(tree.children)).Equals(0)
+//
+//	tree.Insert("43.224.79.174/31")
+//	Assert(t).That(tree.children[0]).Equals(&treeNode{
+//		value: 43,
+//		children: []*treeNode{
+//			{
+//				value: 224,
+//				children: []*treeNode{
+//					{
+//						value: 79,
+//						children: []*treeNode{
+//							{
+//								min: 174,
+//								max: 175,
+//								end: true,
+//							},
+//						},
+//					},
+//				},
+//			},
+//		},
+//	})
+//	Assert(t).That(len(tree.children)).Equals(1)
+//
+//	tree.Insert("43.224.79.174/31")
+//	Assert(t).That(tree.children[0]).Equals(&treeNode{
+//		value: 43,
+//		children: []*treeNode{
+//			{
+//				value: 224,
+//				children: []*treeNode{
+//					{
+//						value: 79,
+//						children: []*treeNode{
+//							{
+//								min: 174,
+//								max: 175,
+//								end: true,
+//							},
+//						},
+//					},
+//				},
+//			},
+//		},
+//	})
+//	Assert(t).That(len(tree.children)).Equals(1)
+//}
+func TestTree(t *testing.T) {
 
+	tree := TreeNode()
 	tree.Insert(IPNetwork8) //"10.0.0.0/8"
-	Assert(t).That(tree.children[0]).Equals(&treeNode{
-		value:    10,
-		children: nil,
-		end:      true,
-		min:      10,
-		max:      10,
-	})
-	Assert(t).That(len(tree.children)).Equals(1)
-
-	tree.Insert(IPNetwork16) //"54.168.0.0/16"
-	Assert(t).That(tree.children[1]).Equals(&treeNode{
-		value: 54,
-		children: []*treeNode{
-			{
-				value:    168,
-				children: nil,
-				end:      true,
-				min:      168,
-				max:      168,
-			},
-		},
-	})
-	Assert(t).That(len(tree.children)).Equals(2)
-	Assert(t).That(len(tree.children[1].children)).Equals(1)
-
-	tree.Insert(IPNetwork24) //"150.222.10.0/24"
-	Assert(t).That(tree.children[2]).Equals(&treeNode{
-		value: 150,
-		children: []*treeNode{
-			{
-				value: 222,
-				children: []*treeNode{
-					{
-						value: 10,
-						end:   true,
-						min:   10,
-						max:   10,
-					},
-				},
-			},
-		},
-	})
-	Assert(t).That(len(tree.children)).Equals(3)
-	Assert(t).That(len(tree.children[2].children)).Equals(1)
-	Assert(t).That(len(tree.children[2].children[0].children)).Equals(1)
-
-	tree.Insert(IPNetwork32) //"52.93.126.244/32"
-	Assert(t).That(tree.children[3]).Equals(&treeNode{
-		value: 52,
-		children: []*treeNode{
-			{
-				value: 93,
-				children: []*treeNode{
-					{
-						value: 126,
-						children: []*treeNode{
-							{
-								value: 244,
-								end:   true,
-								min:   244,
-								max:   244,
-							},
-						},
-					},
-				},
-			},
-		},
-	})
-	Assert(t).That(len(tree.children)).Equals(4)
-	Assert(t).That(len(tree.children[3].children)).Equals(1)
-	Assert(t).That(len(tree.children[3].children[0].children)).Equals(1)
-	Assert(t).That(len(tree.children[3].children[0].children[0].children)).Equals(1)
-}
-
-func TestNonNetworks(t *testing.T) {
-	tree := TreeNode()
-	Assert(t).That(len(tree.children)).Equals(0)
-
-	tree.Insert("43.224.79.174/31")
-	Assert(t).That(tree.children[0]).Equals(&treeNode{
-		value: 43,
-		children: []*treeNode{
-			{
-				value: 224,
-				children: []*treeNode{
-					{
-						value: 79,
-						children: []*treeNode{
-							{
-								min: 174,
-								max: 175,
-								end: true,
-							},
-						},
-					},
-				},
-			},
-		},
-	})
-	Assert(t).That(len(tree.children)).Equals(1)
-
-	tree.Insert("69.107.7.16/29")
-	Assert(t).That(tree.children[1]).Equals(&treeNode{
-		value: 69,
-		children: []*treeNode{
-			{
-				value: 107,
-				children: []*treeNode{
-					{
-						value: 7,
-						children: []*treeNode{
-							{
-								min: 16,
-								max: 23,
-								end: true,
-							},
-						},
-					},
-				},
-			},
-		},
-	})
-	Assert(t).That(len(tree.children)).Equals(2)
-}
-
-func TestChildAlreadyAdded(t *testing.T) {
-	tree := TreeNode()
-	Assert(t).That(len(tree.children)).Equals(0)
-
-	tree.Insert("43.224.79.174/31")
-	Assert(t).That(tree.children[0]).Equals(&treeNode{
-		value: 43,
-		children: []*treeNode{
-			{
-				value: 224,
-				children: []*treeNode{
-					{
-						value: 79,
-						children: []*treeNode{
-							{
-								min: 174,
-								max: 175,
-								end: true,
-							},
-						},
-					},
-				},
-			},
-		},
-	})
-	Assert(t).That(len(tree.children)).Equals(1)
-
-	tree.Insert("43.224.79.174/31")
-	Assert(t).That(tree.children[0]).Equals(&treeNode{
-		value: 43,
-		children: []*treeNode{
-			{
-				value: 224,
-				children: []*treeNode{
-					{
-						value: 79,
-						children: []*treeNode{
-							{
-								min: 174,
-								max: 175,
-								end: true,
-							},
-						},
-					},
-				},
-			},
-		},
-	})
-	Assert(t).That(len(tree.children)).Equals(1)
-}
-
-func TestErrors(t *testing.T) {
-	tree := TreeNode()
-	Assert(t).That(len(tree.children)).Equals(0)
-	err := tree.Insert("")
-	Assert(t).That(err).Equals(ErrInvalidIPAddress)
-}
-
-func TestNetworkAndNonNetworkChildrenAdded(t *testing.T) {
-	tree := TreeNode()
-	Assert(t).That(len(tree.children)).Equals(0)
-	tree.Insert("43.224.79.174/31")
-	Assert(t).That(tree.children[0]).Equals(&treeNode{
-		value: 43,
-		children: []*treeNode{
-			{
-				value: 224,
-				children: []*treeNode{
-					{
-						value: 79,
-						children: []*treeNode{
-							{
-								min: 174,
-								max: 175,
-								end: true,
-							},
-						},
-					},
-				},
-			},
-		},
-	})
-	tree.Insert(IPNetwork8) //"10.0.0.0/8"
-	Assert(t).That(tree.children[1]).Equals(&treeNode{
-		value:    10,
-		end:      true,
-		children: nil,
-		min:      10,
-		max:      10,
-	})
-	Assert(t).That(len(tree.children)).Equals(2)
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-func TestFindIPAddressWithMinMax(t *testing.T) {
-	tree := TreeNode()
-	Assert(t).That(len(tree.children)).Equals(0)
-
 	tree.Insert("3.144.0.0/13")
 	tree.Insert("3.5.140.0/22")
 	tree.Insert("13.34.37.64/27")
@@ -245,75 +200,159 @@ func TestFindIPAddressWithMinMax(t *testing.T) {
 	tree.Insert("13.34.11.32/27")
 	tree.Insert("15.230.39.60/31")
 
-	exists, _ := tree.Search("3.144.124.234")
-	Assert(t).That(exists).Equals(true)
-	exists, _ = tree.Search("3.5.140.28")
-	Assert(t).That(exists).Equals(true)
-	exists, _ = tree.Search("13.34.37.88")
-	Assert(t).That(exists).Equals(true)
-	exists, _ = tree.Search("52.219.171.93")
-	Assert(t).That(exists).Equals(true)
-	exists, _ = tree.Search("52.94.79.1")
-	Assert(t).That(exists).Equals(true)
-	exists, _ = tree.Search("52.95.37.21")
-	Assert(t).That(exists).Equals(true)
-	exists, _ = tree.Search("120.52.22.127")
-	Assert(t).That(exists).Equals(true)
-	exists, _ = tree.Search("150.222.11.87")
-	Assert(t).That(exists).Equals(true)
-	exists, _ = tree.Search("13.34.11.35")
-	Assert(t).That(exists).Equals(true)
-	exists, _ = tree.Search("15.230.39.61")
-	Assert(t).That(exists).Equals(true)
-}
-
-func TestFindNonExistentNetwork(t *testing.T) {
-	tree := TreeNode()
-	Assert(t).That(len(tree.children)).Equals(0)
-
-	tree.Insert("3.144.0.0/13")
-	tree.Insert("3.5.140.0/22")
-	exists, _ := tree.Search("3.152.0.0")
-	Assert(t).That(exists).Equals(false)
-	exists, _ = tree.Search("3.5.144.0")
+	exists := tree.Search("11.0.0.0")
 	Assert(t).That(exists).Equals(false)
 
-}
+	exists = tree.Search("3.144.124.234")
+	Assert(t).That(exists).Equals(true)
+	exists = tree.Search("3.5.140.28")
+	Assert(t).That(exists).Equals(true)
+	exists = tree.Search("13.34.37.88")
+	Assert(t).That(exists).Equals(true)
+	exists = tree.Search("52.219.171.93")
+	Assert(t).That(exists).Equals(true)
+	exists = tree.Search("52.94.79.1")
+	Assert(t).That(exists).Equals(true)
+	exists = tree.Search("52.95.37.21")
+	Assert(t).That(exists).Equals(true)
+	exists = tree.Search("120.52.22.127")
+	Assert(t).That(exists).Equals(true)
+	exists = tree.Search("150.222.11.87")
+	Assert(t).That(exists).Equals(true)
+	exists = tree.Search("13.34.11.35")
+	Assert(t).That(exists).Equals(true)
+	exists = tree.Search("15.230.39.61")
+	Assert(t).That(exists).Equals(true)
 
-func TestFindIPAddressWithoutMinMax(t *testing.T) {
+}
+func TestErrors(t *testing.T) {
 	tree := TreeNode()
 	Assert(t).That(len(tree.children)).Equals(0)
-
-	tree.Insert(IPNetwork8)
-	exists, _ := tree.Search("10.0.0.0")
-	Assert(t).That(exists).Equals(true)
-
-	tree.Insert(IPNetwork16)
-	exists, _ = tree.Search("54.168.0.0")
-	Assert(t).That(exists).Equals(true)
-
-	tree.Insert(IPNetwork24)
-	exists, _ = tree.Search("150.222.10.0")
-	Assert(t).That(exists).Equals(true)
-
-	tree.Insert(IPNetwork32)
-	exists, _ = tree.Search("52.93.126.244")
-	Assert(t).That(exists).Equals(true)
+	err := tree.Insert("")
+	Assert(t).That(err).Equals(ErrInvalidIPAddress)
 }
 
-func TestFindWithAndWithOutMinMax(t *testing.T) {
-	tree := TreeNode()
-	Assert(t).That(len(tree.children)).Equals(0)
+//func TestNetworkAndNonNetworkChildrenAdded(t *testing.T) {
+//	tree := TreeNode()
+//	Assert(t).That(len(tree.children)).Equals(0)
+//	tree.Insert("43.224.79.174/31")
+//	Assert(t).That(tree.children[0]).Equals(&treeNode{
+//		value: 43,
+//		children: []*treeNode{
+//			{
+//				value: 224,
+//				children: []*treeNode{
+//					{
+//						value: 79,
+//						children: []*treeNode{
+//							{
+//								min: 174,
+//								max: 175,
+//								end: true,
+//							},
+//						},
+//					},
+//				},
+//			},
+//		},
+//	})
+//	tree.Insert(IPNetwork8) //"10.0.0.0/8"
+//	Assert(t).That(tree.children[1]).Equals(&treeNode{
+//		value:    10,
+//		end:      true,
+//		children: nil,
+//		min:      10,
+//		max:      10,
+//	})
+//	Assert(t).That(len(tree.children)).Equals(2)
+//}
 
-	tree.Insert(IPNetwork16) //54.168.0.0/16
-	exists, _ := tree.Search("54.168.0.0")
-	Assert(t).That(exists).Equals(true)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	tree.Insert("3.144.0.0/13")
-	exists, _ = tree.Search("3.144.0.0")
-	Assert(t).That(exists).Equals(true)
-	Assert(t).That(len(tree.children)).Equals(2)
-}
+//func TestFindIPAddressWithMinMax(t *testing.T) {
+//	tree := TreeNode()
+//	Assert(t).That(len(tree.children)).Equals(0)
+//
+//	tree.Insert("3.144.0.0/13")
+//	tree.Insert("3.5.140.0/22")
+//	tree.Insert("13.34.37.64/27")
+//	tree.Insert("52.219.170.0/23")
+//	tree.Insert("52.94.76.0/22")
+//	tree.Insert("52.95.36.0/22")
+//	tree.Insert("120.52.22.96/27")
+//	tree.Insert("150.222.11.86/31")
+//	tree.Insert("13.34.11.32/27")
+//	tree.Insert("15.230.39.60/31")
+//
+//	exists, _ := tree.Search("3.144.124.234")
+//	Assert(t).That(exists).Equals(true)
+//	exists, _ = tree.Search("3.5.140.28")
+//	Assert(t).That(exists).Equals(true)
+//	exists, _ = tree.Search("13.34.37.88")
+//	Assert(t).That(exists).Equals(true)
+//	exists, _ = tree.Search("52.219.171.93")
+//	Assert(t).That(exists).Equals(true)
+//	exists, _ = tree.Search("52.94.79.1")
+//	Assert(t).That(exists).Equals(true)
+//	exists, _ = tree.Search("52.95.37.21")
+//	Assert(t).That(exists).Equals(true)
+//	exists, _ = tree.Search("120.52.22.127")
+//	Assert(t).That(exists).Equals(true)
+//	exists, _ = tree.Search("150.222.11.87")
+//	Assert(t).That(exists).Equals(true)
+//	exists, _ = tree.Search("13.34.11.35")
+//	Assert(t).That(exists).Equals(true)
+//	exists, _ = tree.Search("15.230.39.61")
+//	Assert(t).That(exists).Equals(true)
+//}
+//
+//func TestFindNonExistentNetwork(t *testing.T) {
+//	tree := TreeNode()
+//	Assert(t).That(len(tree.children)).Equals(0)
+//
+//	tree.Insert("3.144.0.0/13")
+//	tree.Insert("3.5.140.0/22")
+//	exists, _ := tree.Search("3.152.0.0")
+//	Assert(t).That(exists).Equals(false)
+//	exists, _ = tree.Search("3.5.144.0")
+//	Assert(t).That(exists).Equals(false)
+//
+//}
+//
+//func TestFindIPAddressWithoutMinMax(t *testing.T) {
+//	tree := TreeNode()
+//	Assert(t).That(len(tree.children)).Equals(0)
+//
+//	tree.Insert(IPNetwork8)
+//	exists, _ := tree.Search("10.0.0.0")
+//	Assert(t).That(exists).Equals(true)
+//
+//	tree.Insert(IPNetwork16)
+//	exists, _ = tree.Search("54.168.0.0")
+//	Assert(t).That(exists).Equals(true)
+//
+//	tree.Insert(IPNetwork24)
+//	exists, _ = tree.Search("150.222.10.0")
+//	Assert(t).That(exists).Equals(true)
+//
+//	tree.Insert(IPNetwork32)
+//	exists, _ = tree.Search("52.93.126.244")
+//	Assert(t).That(exists).Equals(true)
+//}
+//
+//func TestFindWithAndWithOutMinMax(t *testing.T) {
+//	tree := TreeNode()
+//	Assert(t).That(len(tree.children)).Equals(0)
+//
+//	tree.Insert(IPNetwork16) //54.168.0.0/16
+//	exists, _ := tree.Search("54.168.0.0")
+//	Assert(t).That(exists).Equals(true)
+//
+//	tree.Insert("3.144.0.0/13")
+//	exists, _ = tree.Search("3.144.0.0")
+//	Assert(t).That(exists).Equals(true)
+//	Assert(t).That(len(tree.children)).Equals(2)
+//}
 
 const (
 	IPNetwork8  = "10.0.0.0/8"
@@ -348,7 +387,7 @@ func (this *Assertion) Equals(expected interface{}) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func BenchmarkTreeTest(b *testing.B) {
-	IpToSearch := "13.247.0.0/16" //"15.230.39.172/31" //"13.108.0.0/14"
+	IpToSearch := "13.108.0.0/14" //"15.230.39.172/31" //"13.108.0.0/14"
 
 	Tree := TreeNode()
 
@@ -3029,7 +3068,7 @@ func BenchmarkTreeTest(b *testing.B) {
 	Tree.New(ipAddresses)
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
-		_, _ = Tree.Search(IpToSearch)
+		_ = Tree.Search(IpToSearch)
 	}
 	b.ReportAllocs()
 }
