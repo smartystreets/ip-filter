@@ -4,6 +4,7 @@ import "C"
 import (
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 type treeNode struct {
@@ -25,14 +26,27 @@ func (this *treeNode) New(addresses []string) {
 }
 
 func (this *treeNode) Insert(ipAddress string) error {
+	var index int
+	var numericIP uint32
+
 	if len(ipAddress) == 0 {
 		return ErrInvalidIPAddress
 	}
-	position := strings.Index(ipAddress, "/")
-	subnetBits, _ := strconv.Atoi(ipAddress[position+1:])
-	ipAddress = ipAddress[:position]
 
-	numericIP := parseIP(ipAddress)
+	if !NumbersOnly(ipAddress) {
+		return ErrInvalidIPAddress
+	}
+
+	if index = strings.Index(ipAddress, "/"); index == -1 {
+		return ErrInvalidIPAddress
+	}
+
+	subnetBits, _ := strconv.Atoi(ipAddress[index+1:])
+	ipAddress = ipAddress[:index]
+
+	if numericIP = parseIP(ipAddress); numericIP == 0 {
+		return ErrInvalidIPAddress
+	}
 
 	current := this
 
@@ -53,11 +67,15 @@ func (this *treeNode) Insert(ipAddress string) error {
 }
 
 func (this *treeNode) Search(ipAddress string) bool {
-	if len(ipAddress) == 0{
+	var numericIP uint32
+
+	if len(ipAddress) == 0 {
 		return false
 	}
 
-	numericIP := parseIP(ipAddress)
+	if numericIP = parseIP(ipAddress); numericIP == 0 {
+		return false
+	}
 
 	current := this
 
@@ -79,6 +97,8 @@ func (this *treeNode) Search(ipAddress string) bool {
 
 func parseIP(ipAddress string) uint32 {
 	var numericIP uint32
+	var count int
+
 	for i := 0; i < 4; i++ {
 		var fragment uint64
 		var index int
@@ -86,6 +106,7 @@ func parseIP(ipAddress string) uint32 {
 		for j := range ipAddress {
 			if ipAddress[j] == '.' {
 				index = j
+				count++
 				break
 			}
 			continue
@@ -99,12 +120,22 @@ func parseIP(ipAddress string) uint32 {
 
 		ipAddress = ipAddress[index+1:]
 
+		if len(ipAddress) == 0 && count < 3 {
+			return 0
+		}
 		numericIP = numericIP << 8
 		numericIP += uint32(fragment)
 	}
+
+	if count > 3 || count < 3 {
+		return 0
+	}
+
 	return numericIP
 }
 
-//TODO: try and figure out how to kill it
-//is it long enough is it too long?
-//
+func NumbersOnly(IPAddress string) bool {
+	nonLetter := func(c rune) bool { return unicode.IsLetter(c) }
+	words := strings.FieldsFunc(IPAddress, nonLetter)
+	return IPAddress == strings.Join(words, "")
+}
