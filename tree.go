@@ -7,45 +7,48 @@ import (
 	"unicode"
 )
 
+type IPFilter interface {
+	Contains(string) bool
+}
+
 type treeNode struct {
 	children []*treeNode
 	isBanned bool
 }
 
-func TreeNode() *treeNode {
-	return &treeNode{
-		children: make([]*treeNode, 2),
-		isBanned: false,
-	}
-}
+func New(addresses ...string) IPFilter {
+	this := newNode()
 
-func (this *treeNode) New(addresses []string) {
 	for _, item := range addresses {
-		this.Insert(item)
+		this.insertSubnetMask(item)
 	}
+
+	return this
+}
+func newNode() *treeNode {
+	return &treeNode{children: make([]*treeNode, 2)}
 }
 
-func (this *treeNode) Insert(ipAddress string) error {
-	var index int
-	var numericIP uint32
-
+func (this *treeNode) insertSubnetMask(ipAddress string) {
 	if len(ipAddress) == 0 {
-		return ErrInvalidIPAddress
+		return
 	}
 
-	if !NumbersOnly(ipAddress) {
-		return ErrInvalidIPAddress
+	if !isNumeric(ipAddress) {
+		return
 	}
 
-	if index = strings.Index(ipAddress, "/"); index == -1 {
-		return ErrInvalidIPAddress
+	index := strings.Index(ipAddress, "/")
+	if index == -1 {
+		return
 	}
 
 	subnetBits, _ := strconv.Atoi(ipAddress[index+1:])
 	ipAddress = ipAddress[:index]
 
-	if numericIP = parseIP(ipAddress); numericIP == 0 {
-		return ErrInvalidIPAddress
+	numericIP := parseIPAddress(ipAddress)
+	if numericIP == 0 {
+		return
 	}
 
 	current := this
@@ -55,25 +58,29 @@ func (this *treeNode) Insert(ipAddress string) error {
 		child := current.children[next]
 
 		if child == nil {
-			child = TreeNode()
-
+			child = newNode()
 			current.children[next] = child
 		}
 		current = child
 	}
 
 	current.isBanned = true
-	return nil
+}
+func isNumeric(value string) bool {
+	// TODO: check explicitly for '0' through '9' and also '.'
+	nonLetter := func(c rune) bool { return unicode.IsLetter(c) }
+	words := strings.FieldsFunc(value, nonLetter)
+	return value == strings.Join(words, "")
 }
 
-func (this *treeNode) Search(ipAddress string) bool {
+func (this *treeNode) Contains(ipAddress string) bool {
 	var numericIP uint32
 
 	if len(ipAddress) == 0 {
 		return false
 	}
 
-	if numericIP = parseIP(ipAddress); numericIP == 0 {
+	if numericIP = parseIPAddress(ipAddress); numericIP == 0 {
 		return false
 	}
 
@@ -94,8 +101,7 @@ func (this *treeNode) Search(ipAddress string) bool {
 	}
 	return false
 }
-
-func parseIP(ipAddress string) uint32 {
+func parseIPAddress(value string) uint32 {
 	var numericIP uint32
 	var count int
 
@@ -103,9 +109,9 @@ func parseIP(ipAddress string) uint32 {
 		var fragment uint64
 		var index int
 
-		for j := range ipAddress {
-			if ipAddress[j] == '.' {
-				index = j
+		for x := range value {
+			if value[x] == '.' {
+				index = x
 				count++
 				break
 			}
@@ -113,16 +119,17 @@ func parseIP(ipAddress string) uint32 {
 		}
 
 		if index == 0 {
-			fragment, _ = strconv.ParseUint(ipAddress, 10, 32)
+			fragment, _ = strconv.ParseUint(value, 10, 32)
 		} else {
-			fragment, _ = strconv.ParseUint(ipAddress[:index], 10, 32)
+			fragment, _ = strconv.ParseUint(value[:index], 10, 32)
 		}
 
-		ipAddress = ipAddress[index+1:]
+		value = value[index+1:]
 
-		if len(ipAddress) == 0 && count < 3 {
+		if len(value) == 0 && count < 3 {
 			return 0
 		}
+
 		numericIP = numericIP << 8
 		numericIP += uint32(fragment)
 	}
@@ -132,10 +139,4 @@ func parseIP(ipAddress string) uint32 {
 	}
 
 	return numericIP
-}
-
-func NumbersOnly(IPAddress string) bool {
-	nonLetter := func(c rune) bool { return unicode.IsLetter(c) }
-	words := strings.FieldsFunc(IPAddress, nonLetter)
-	return IPAddress == strings.Join(words, "")
 }
