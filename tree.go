@@ -25,6 +25,9 @@ func (this *treeNode) New(addresses []string) {
 }
 
 func (this *treeNode) Insert(ipAddress string) error {
+	if len(ipAddress) == 0 {
+		return ErrInvalidIPAddress
+	}
 	position := strings.Index(ipAddress, "/")
 	subnetBits, _ := strconv.Atoi(ipAddress[position+1:])
 	ipAddress = ipAddress[:position]
@@ -50,6 +53,10 @@ func (this *treeNode) Insert(ipAddress string) error {
 }
 
 func (this *treeNode) Search(ipAddress string) bool {
+	if len(ipAddress) == 0{
+		return false
+	}
+
 	numericIP := parseIP(ipAddress)
 
 	current := this
@@ -81,7 +88,7 @@ func parseIP(ipAddress string) uint32 {
 				index = j
 				break
 			}
-			index = 0
+			continue
 		}
 
 		if index == 0 {
@@ -89,6 +96,9 @@ func parseIP(ipAddress string) uint32 {
 		} else {
 			fragment, _ = strconv.ParseUint(ipAddress[:index], 10, 32)
 		}
+
+		ipAddress = ipAddress[index+1:]
+
 		numericIP = numericIP << 8
 		numericIP += uint32(fragment)
 	}
@@ -96,3 +106,5 @@ func parseIP(ipAddress string) uint32 {
 }
 
 //TODO: try and figure out how to kill it
+//is it long enough is it too long?
+//
