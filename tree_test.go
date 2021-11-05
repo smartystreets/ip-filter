@@ -9,24 +9,34 @@ func TestErrors(t *testing.T) {
 	tree := TreeNode()
 	err := tree.Insert("")
 	Assert(t).That(err).Equals(ErrInvalidIPAddress)
+
 	err = tree.Insert("10.0.0.0")
 	Assert(t).That(err).Equals(ErrInvalidIPAddress)
+
 	err = tree.Insert("caroline hickey")
 	Assert(t).That(err).Equals(ErrInvalidIPAddress)
+
 	exists := tree.Search("")
 	Assert(t).That(exists).Equals(false)
+
 	exists = tree.Search("caroline hickey")
 	Assert(t).That(exists).Equals(false)
+
 	exists = tree.Search("a.a.a.a.a")
 	Assert(t).That(exists).Equals(false)
+
 	exists = tree.Search(".......")
 	Assert(t).That(exists).Equals(false)
+
 	tree.Insert("10.0.0.1.1.1/32")
 	Assert(t).That(err).Equals(ErrInvalidIPAddress)
+
 	exists = tree.Search("10.0.0.1.1.1")
 	Assert(t).That(exists).Equals(false)
-	tree.Insert("10.0/8") //"10.0.0.0/8"
+
+	tree.Insert("10.0/8")
 	Assert(t).That(err).Equals(ErrInvalidIPAddress)
+
 	err = tree.Insert("10.0.0.0/8")
 	exists = tree.Search("10.0")
 	Assert(t).That(exists).Equals(false)
