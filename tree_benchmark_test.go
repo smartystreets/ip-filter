@@ -1,4 +1,4 @@
-package IPFilter
+package ipfilter
 
 import "testing"
 

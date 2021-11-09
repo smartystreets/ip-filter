@@ -1,6 +1,5 @@
-package IPFilter
+package ipfilter
 
-import "C"
 import (
 	"strconv"
 	"strings"
