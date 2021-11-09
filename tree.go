@@ -3,7 +3,6 @@ package ipfilter
 import (
 	"strconv"
 	"strings"
-	"unicode"
 )
 
 type Filter interface {
@@ -33,10 +32,6 @@ func (this *treeNode) insertSubnetMask(ipAddress string) {
 		return
 	}
 
-	if !isNumeric(ipAddress) {
-		return
-	}
-
 	index := strings.Index(ipAddress, "/")
 	if index == -1 {
 		return
@@ -44,6 +39,10 @@ func (this *treeNode) insertSubnetMask(ipAddress string) {
 
 	subnetBits, _ := strconv.Atoi(ipAddress[index+1:])
 	ipAddress = ipAddress[:index]
+
+	if !isNumeric(ipAddress) {
+		return
+	}
 
 	numericIP := parseIPAddress(ipAddress)
 	if numericIP == 0 {
@@ -66,10 +65,13 @@ func (this *treeNode) insertSubnetMask(ipAddress string) {
 	current.isBanned = true
 }
 func isNumeric(value string) bool {
-	// TODO: check explicitly for '0' through '9' and also '.'
-	nonLetter := func(c rune) bool { return unicode.IsLetter(c) }
-	words := strings.FieldsFunc(value, nonLetter)
-	return value == strings.Join(words, "")
+	for _, character := range value {
+		if character != '.' && (character > '9' || character < '0') {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (this *treeNode) Contains(ipAddress string) bool {
