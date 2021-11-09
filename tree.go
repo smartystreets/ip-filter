@@ -6,7 +6,7 @@ import (
 	"unicode"
 )
 
-type IPFilter interface {
+type Filter interface {
 	Contains(string) bool
 }
 
@@ -15,7 +15,7 @@ type treeNode struct {
 	isBanned bool
 }
 
-func New(addresses ...string) IPFilter {
+func New(addresses ...string) Filter {
 	this := newNode()
 
 	for _, item := range addresses {
