@@ -108,13 +108,13 @@ func parseIPAddress(value string) uint32 {
 		var index int
 
 		for x := range value {
-			if value[x] == octetSeparator {
-				index = x
-				count++
-				break
+			if value[x] != octetSeparator {
+				continue
 			}
 
-			continue
+			index = x
+			count++
+			break
 		}
 
 		if index == 0 {
@@ -132,7 +132,7 @@ func parseIPAddress(value string) uint32 {
 		numericIP += uint32(fragment)
 	}
 
-	if count > octetSeparatorCount || count < octetSeparatorCount {
+	if count != octetSeparatorCount {
 		return 0
 	}
 
