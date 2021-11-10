@@ -5,9 +5,6 @@ import (
 	"strings"
 )
 
-type Filter interface {
-	Contains(string) bool
-}
 
 type treeNode struct {
 	children []*treeNode
