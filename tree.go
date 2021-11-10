@@ -18,7 +18,7 @@ func New(addresses ...string) Filter {
 	this := newNode()
 
 	for _, item := range addresses {
-		this.insertSubnetMask(item)
+		this.add(item)
 	}
 
 	return this
@@ -27,30 +27,28 @@ func newNode() *treeNode {
 	return &treeNode{children: make([]*treeNode, 2)}
 }
 
-func (this *treeNode) insertSubnetMask(ipAddress string) {
-	if len(ipAddress) == 0 {
+func (this *treeNode) add(subnetMask string) {
+	if len(subnetMask) == 0 {
 		return
 	}
 
-	index := strings.Index(ipAddress, "/")
+	index := strings.Index(subnetMask, "/")
 	if index == -1 {
 		return
 	}
 
-	subnetBits, _ := strconv.Atoi(ipAddress[index+1:])
-	ipAddress = ipAddress[:index]
-
-	if !isNumeric(ipAddress) {
+	subnetBits, _ := strconv.Atoi(subnetMask[index+1:])
+	baseIPAddress := subnetMask[:index]
+	if !isNumeric(baseIPAddress) {
 		return
 	}
 
-	numericIP := parseIPAddress(ipAddress)
+	numericIP := parseIPAddress(baseIPAddress)
 	if numericIP == 0 {
 		return
 	}
 
 	current := this
-
 	for i := 0; i < subnetBits; i++ {
 		next := uint32(numericIP << (i) >> (31))
 		child := current.children[next]
