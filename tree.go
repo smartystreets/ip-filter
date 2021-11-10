@@ -32,7 +32,7 @@ func (this *treeNode) add(subnetMask string) {
 		return
 	}
 
-	index := strings.Index(subnetMask, "/")
+	index := strings.Index(subnetMask, subnetMaskSeparator)
 	if index == -1 {
 		return
 	}
@@ -64,7 +64,7 @@ func (this *treeNode) add(subnetMask string) {
 }
 func isNumeric(value string) bool {
 	for _, character := range value {
-		if character != '.' && (character > '9' || character < '0') {
+		if character != octetSeparator && (character > '9' || character < '0') {
 			return false
 		}
 	}
@@ -144,7 +144,8 @@ const (
 	ipv4BitCount        = 32
 	ipv4BitMask         = ipv4BitCount - 1
 	octetBits           = 8
-	octetSeparator      = '.'
 	octetSeparatorCount = 3
 	octetCount          = 4
+	octetSeparator      = '.'
+	subnetMaskSeparator = "/"
 )
