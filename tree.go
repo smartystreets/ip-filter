@@ -5,7 +5,6 @@ import (
 	"strings"
 )
 
-
 type treeNode struct {
 	children []*treeNode
 	isBanned bool
