@@ -95,6 +95,35 @@ func (this *treeNode) Contains(ipAddress string) bool {
 
 	return false
 }
+
+func (this *treeNode) Remove(ipAddress string) {
+	if len(ipAddress) == 0 {
+		return
+	}
+
+	var numericIP uint32
+	if numericIP = parseIPAddress(ipAddress); numericIP == 0 {
+		return
+	}
+
+	current := this
+	for i := 0; i < ipv4BitCount; i++ {
+		nextBit := uint32(numericIP << i >> ipv4BitMask)
+		child := current.children[nextBit]
+
+		if child == nil {
+			return
+		}
+
+		current = child
+		if current.isBanned { // Basically if this is found then... we want to delete it...
+			current.isBanned = false
+			return
+		}
+	}
+
+	return
+}
 func parseIPAddress(value string) uint32 {
 	var numericIP uint32
 	var count int
@@ -134,6 +163,8 @@ func parseIPAddress(value string) uint32 {
 
 	return numericIP
 }
+
+
 
 const (
 	decimalNumber       = 10
