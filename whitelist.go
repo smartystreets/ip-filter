@@ -110,9 +110,13 @@ func (this *treeNode2) Remove2(numericIP, i uint32, subnetBits int, current *tre
 	nextBit := numericIP << i >> ipv4BitMask
 	child := current.children[nextBit]
 
+	if child == nil {
+		return false
+	}
+
 	if d := this.Remove2(numericIP, i+1, subnetBits, child); d == true {
 
-		current.children[nextBit] = nil //
+		current.children[nextBit] = nil
 		if current.isAllowed == true || current.children[0] != nil || current.children[1] != nil {
 			return false
 		}

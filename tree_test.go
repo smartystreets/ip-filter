@@ -184,44 +184,35 @@ func TestDeleteCleanNetwork(t *testing.T) {
 	exists = whiteList.Contains("52.93.126.244")
 	Assert(t).That(exists).Equals(true)
 
-	exists = whiteList.Remove("54.168.0.0/16")
-	Assert(t).That(exists).Equals(false)
-
-	exists = whiteList.Contains("54.168.255.253")
-	Assert(t).That(exists).Equals(false)
-
-	exists = whiteList.Remove("150.222.10.0/24")
-	Assert(t).That(exists).Equals(false)
-
+	_ = whiteList.Remove("150.222.10.0/24")
 	exists = whiteList.Contains("150.222.10.253")
 	Assert(t).That(exists).Equals(false)
 
-	exists = whiteList.Contains("52.93.126.244")
-	Assert(t).That(exists).Equals(true)
-
-	exists = whiteList.Remove("52.93.126.244/32")
-	Assert(t).That(exists).Equals(false)
-
+	_ = whiteList.Remove("52.93.126.244/32")
 	exists = whiteList.Contains("52.93.126.244")
 	Assert(t).That(exists).Equals(false)
 }
 func TestDeleteNonCleanNetwork(t *testing.T) {
 	whiteList := New2(ipAddresses...)
 
-	// 13.34.52.96/27
-	exists := whiteList.Contains("13.34.52.119")
+	// "13.34.37.64/27"
+	exists := whiteList.Contains("13.34.37.90")
 	Assert(t).That(exists).Equals(true)
 
-	exists = whiteList.Remove("13.34.52.96/27")
+	_ = whiteList.Remove("13.34.37.64/27")
+	exists = whiteList.Contains("13.34.37.90")
 	Assert(t).That(exists).Equals(false)
 
+	// 13.34.52.96/27
+	exists = whiteList.Contains("13.34.52.119")
+	Assert(t).That(exists).Equals(true)
+
+	_ = whiteList.Remove("13.34.52.96/27")
 	exists = whiteList.Contains("13.34.52.119")
 	Assert(t).That(exists).Equals(false)
 
 	// 13.34.52.96/27
-	exists = whiteList.Contains("52.144.192.211")
-	Assert(t).That(exists).Equals(true)
-
+	_ = whiteList.Contains("52.144.192.211")
 	exists = whiteList.Remove("52.144.192.192/26")
 	Assert(t).That(exists).Equals(false)
 
@@ -232,9 +223,7 @@ func TestDeleteNonCleanNetwork(t *testing.T) {
 	exists = whiteList.Contains("150.222.217.249")
 	Assert(t).That(exists).Equals(true)
 
-	exists = whiteList.Remove("150.222.217.248/30")
-	Assert(t).That(exists).Equals(false)
-
+	_ = whiteList.Remove("150.222.217.248/30")
 	exists = whiteList.Contains("150.222.217.249")
 	Assert(t).That(exists).Equals(false)
 
@@ -242,9 +231,7 @@ func TestDeleteNonCleanNetwork(t *testing.T) {
 	exists = whiteList.Contains("52.94.198.70")
 	Assert(t).That(exists).Equals(true)
 
-	exists = whiteList.Remove("52.94.198.64/28")
-	Assert(t).That(exists).Equals(false)
-
+	_ = whiteList.Remove("52.94.198.64/28")
 	exists = whiteList.Contains("52.94.198.73")
 	Assert(t).That(exists).Equals(false)
 
@@ -252,9 +239,7 @@ func TestDeleteNonCleanNetwork(t *testing.T) {
 	exists = whiteList.Contains("15.230.133.17")
 	Assert(t).That(exists).Equals(true)
 
-	exists = whiteList.Remove("15.230.133.17/32")
-	Assert(t).That(exists).Equals(false)
-
+	_ = whiteList.Remove("15.230.133.17/32")
 	exists = whiteList.Contains("15.230.133.17")
 	Assert(t).That(exists).Equals(false)
 
@@ -262,10 +247,24 @@ func TestDeleteNonCleanNetwork(t *testing.T) {
 	exists = whiteList.Contains("176.32.125.50")
 	Assert(t).That(exists).Equals(true)
 
-	exists = whiteList.Remove("176.32.125.0/25")
+	_ = whiteList.Remove("176.32.125.0/25")
+	exists = whiteList.Contains("176.32.125.50")
+	Assert(t).That(exists).Equals(false)
+}
+func TestDeletionOfNonExistentNetwork(t *testing.T) {
+	whiteList := New2(
+		IPNetwork8,  // "10.0.0.0/8"
+		IPNetwork16, // "54.168.0.0/16"
+	)
+	exists := whiteList.Contains("10.255.255.254")
 	Assert(t).That(exists).Equals(false)
 
-	exists = whiteList.Contains("176.32.125.50")
+	_ = whiteList.Remove("10.0.0.0/8")
+	exists = whiteList.Contains("54.168.255.253")
+	Assert(t).That(exists).Equals(false)
+
+	_ = whiteList.Remove("54.168.0.0/16")
+	exists = whiteList.Contains("54.168.255.255")
 	Assert(t).That(exists).Equals(false)
 }
 
