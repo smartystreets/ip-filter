@@ -119,6 +119,156 @@ func TestFindWithCleanAndNonCleanNetwork(t *testing.T) {
 	Assert(t).That(exists).Equals(true)
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func TestDisallowAddingLargeNetworks(t *testing.T) {
+	whiteList := New2(
+		"3.144.0.0/13",
+		"3.5.140.0/22",
+		"13.34.37.64/27",
+		"52.219.170.0/23",
+		"52.94.76.0/22",
+		"52.95.36.0/22",
+		"120.52.22.96/27",
+		"150.222.11.86/31",
+		"13.34.11.32/27",
+		"15.230.39.60/31")
+
+	exists := whiteList.Contains("3.144.124.234")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("3.5.140.28")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("13.34.37.88")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Contains("52.219.171.93")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("52.94.79.1")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("52.95.37.21")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("120.52.22.127")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Contains("150.222.11.87")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Contains("13.34.11.35")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Contains("15.230.39.61")
+	Assert(t).That(exists).Equals(true)
+}
+func TestDeleteCleanNetwork(t *testing.T) {
+	whiteList := New2(
+		IPNetwork8,  // "10.0.0.0/8"
+		IPNetwork16, // "54.168.0.0/16"
+		IPNetwork24, // "150.222.10.0/24"
+		IPNetwork32, // "52.93.126.244/32"
+	)
+
+	exists := whiteList.Contains("10.255.255.254")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("54.168.255.255")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("150.222.10.255")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Contains("52.93.126.244")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Remove("54.168.0.0/16")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("54.168.255.253")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Remove("150.222.10.0/24")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("150.222.10.253")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("52.93.126.244")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Remove("52.93.126.244/32")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("52.93.126.244")
+	Assert(t).That(exists).Equals(false)
+}
+func TestDeleteNonCleanNetwork(t *testing.T) {
+	whiteList := New2(ipAddresses...)
+
+	// 13.34.52.96/27
+	exists := whiteList.Contains("13.34.52.119")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Remove("13.34.52.96/27")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("13.34.52.119")
+	Assert(t).That(exists).Equals(false)
+
+	// 13.34.52.96/27
+	exists = whiteList.Contains("52.144.192.211")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Remove("52.144.192.192/26")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("52.144.192.211")
+	Assert(t).That(exists).Equals(false)
+
+	// 150.222.217.248/30
+	exists = whiteList.Contains("150.222.217.249")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Remove("150.222.217.248/30")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("150.222.217.249")
+	Assert(t).That(exists).Equals(false)
+
+	// 52.94.198.64/28
+	exists = whiteList.Contains("52.94.198.70")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Remove("52.94.198.64/28")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("52.94.198.73")
+	Assert(t).That(exists).Equals(false)
+
+	// 15.230.133.17/32
+	exists = whiteList.Contains("15.230.133.17")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Remove("15.230.133.17/32")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("15.230.133.17")
+	Assert(t).That(exists).Equals(false)
+
+	// 176.32.125.0/25
+	exists = whiteList.Contains("176.32.125.50")
+	Assert(t).That(exists).Equals(true)
+
+	exists = whiteList.Remove("176.32.125.0/25")
+	Assert(t).That(exists).Equals(false)
+
+	exists = whiteList.Contains("176.32.125.50")
+	Assert(t).That(exists).Equals(false)
+}
+
 const (
 	IPNetwork8  = "10.0.0.0/8"
 	IPNetwork16 = "54.168.0.0/16"
