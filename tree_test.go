@@ -267,6 +267,52 @@ func TestDeletionOfNonExistentNetwork(t *testing.T) {
 	exists = whiteList.Contains("54.168.255.255")
 	Assert(t).That(exists).Equals(false)
 }
+func TestErrorsInDeletion(t *testing.T) {
+	whiteList := New2(
+		"3.144.0.0/13",
+		"3.5.140.0/22",
+		"13.34.37.64/27",
+		"52.219.170.0/23",
+		"52.94.76.0/22",
+		"52.95.36.0/22",
+		"120.52.22.96/27",
+		"150.222.11.86/31",
+		"13.34.11.32/27",
+		"15.230.39.60/31")
+
+	successful := whiteList.Remove("")
+	Assert(t).That(successful).Equals(false)
+
+	successful = whiteList.Remove("hello, world!")
+	Assert(t).That(successful).Equals(false)
+
+	successful = whiteList.Remove("hello, world!/24")
+	Assert(t).That(successful).Equals(false)
+
+	successful = whiteList.Remove("a.a.a.a.a")
+	Assert(t).That(successful).Equals(false)
+
+	successful = whiteList.Remove("a.a.a.a.a/24")
+	Assert(t).That(successful).Equals(false)
+
+	successful = whiteList.Remove(".......")
+	Assert(t).That(successful).Equals(false)
+
+	successful = whiteList.Remove("......./24")
+	Assert(t).That(successful).Equals(false)
+
+	successful = whiteList.Remove("10.0.0.1.1.1")
+	Assert(t).That(successful).Equals(false)
+
+	successful = whiteList.Remove("10.0.0.1.1.1/24")
+	Assert(t).That(successful).Equals(false)
+
+	successful = whiteList.Remove("10.0")
+	Assert(t).That(successful).Equals(false)
+
+	successful = whiteList.Remove("10.0/24")
+	Assert(t).That(successful).Equals(false)
+}
 
 const (
 	IPNetwork8  = "10.0.0.0/8"

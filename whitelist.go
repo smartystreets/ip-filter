@@ -97,6 +97,7 @@ func (this *treeNode2) Remove2(numericIP, i uint32, subnetBits int, current *tre
 	if numericIP == 0 {
 		return false
 	}
+
 	if i == uint32(subnetBits) {
 		if current.isAllowed == true {
 			if current.children[0] == nil && current.children[1] == nil {
@@ -138,6 +139,8 @@ func (this *treeNode2) Remove(ipAddress string) bool {
 	if !isNumeric(baseIPAddress) {
 		return false
 	}
-	numericIP = parseIPAddress(baseIPAddress)
+	if numericIP = parseIPAddress(ipAddress); numericIP == 0 {
+		return false
+	}
 	return this.Remove2(numericIP, 0, subnetBits, this)
 }
