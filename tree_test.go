@@ -122,7 +122,7 @@ func TestFindWithCleanAndNonCleanNetwork(t *testing.T) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 func TestDisallowAddingLargeNetworks(t *testing.T) {
-	whiteList := New2(
+	whiteList := New(
 		"3.144.0.0/13",
 		"3.5.140.0/22",
 		"13.34.37.64/27",
@@ -165,7 +165,7 @@ func TestDisallowAddingLargeNetworks(t *testing.T) {
 	Assert(t).That(exists).Equals(true)
 }
 func TestDeleteCleanNetwork(t *testing.T) {
-	whiteList := New2(
+	whiteList := New(
 		IPNetwork8,  // "10.0.0.0/8"
 		IPNetwork16, // "54.168.0.0/16"
 		IPNetwork24, // "150.222.10.0/24"
@@ -193,7 +193,7 @@ func TestDeleteCleanNetwork(t *testing.T) {
 	Assert(t).That(exists).Equals(false)
 }
 func TestDeleteNonCleanNetwork(t *testing.T) {
-	whiteList := New2(ipAddresses...)
+	whiteList := New(ipAddresses...)
 
 	// "13.34.37.64/27"
 	exists := whiteList.Contains("13.34.37.90")
@@ -252,7 +252,7 @@ func TestDeleteNonCleanNetwork(t *testing.T) {
 	Assert(t).That(exists).Equals(false)
 }
 func TestDeletionOfNonExistentNetwork(t *testing.T) {
-	whiteList := New2(
+	whiteList := New(
 		IPNetwork8,  // "10.0.0.0/8"
 		IPNetwork16, // "54.168.0.0/16"
 	)
@@ -268,7 +268,7 @@ func TestDeletionOfNonExistentNetwork(t *testing.T) {
 	Assert(t).That(exists).Equals(false)
 }
 func TestErrorsInDeletion(t *testing.T) {
-	whiteList := New2(
+	whiteList := New(
 		"3.144.0.0/13",
 		"3.5.140.0/22",
 		"13.34.37.64/27",

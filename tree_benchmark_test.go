@@ -14,7 +14,7 @@ func BenchmarkTreeTest(b *testing.B) {
 }
 
 func BenchmarkWhiteListTest(b *testing.B) {
-	filter := New2(ipAddresses...)
+	filter := New(ipAddresses...)
 
 	b.ResetTimer()
 	b.ReportAllocs()
