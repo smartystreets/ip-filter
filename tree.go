@@ -6,14 +6,14 @@ import (
 )
 
 type treeNode struct {
-	children  []*treeNode
-	isAllowed bool
+	children []*treeNode
+	flagged  bool
 }
 
-func New(addresses ...string) WhiteList {
+func New(addresses ...string) Filter {
 	return NewWithMaxSubnetSize(8, addresses...)
 }
-func NewWithMaxSubnetSize(maxSubnetSize int, addresses ...string) WhiteList {
+func NewWithMaxSubnetSize(maxSubnetSize int, addresses ...string) Filter {
 	this := newNode()
 
 	for _, item := range addresses {
@@ -63,7 +63,7 @@ func (this *treeNode) add(maxSubnetSize int, subnetMask string) {
 		current = child
 	}
 
-	current.isAllowed = true
+	current.flagged = true
 }
 func isNumeric(value string) bool {
 	for _, character := range value {
@@ -95,7 +95,7 @@ func (this *treeNode) Contains(ipAddress string) bool {
 		}
 
 		current = child
-		if current.isAllowed {
+		if current.flagged {
 			return true
 		}
 	}
@@ -157,7 +157,7 @@ func (this *treeNode) Remove(ipAddress string) bool {
 	if !isNumeric(baseIPAddress) {
 		return false
 	}
-	if numericIP = parseIPAddress(ipAddress); numericIP == 0 {
+	if numericIP = parseIPAddress(baseIPAddress); numericIP == 0 {
 		return false
 	}
 	return this.remove(numericIP, 0, subnetBits, this)
@@ -168,11 +168,11 @@ func (this *treeNode) remove(numericIP, i uint32, subnetBits int, current *treeN
 	}
 
 	if i == uint32(subnetBits) {
-		if current.isAllowed == true {
+		if current.flagged == true {
 			if current.children[0] == nil && current.children[1] == nil {
 				return true
 			}
-			current.isAllowed = false
+			current.flagged = false
 			return false
 		}
 	}
@@ -187,7 +187,7 @@ func (this *treeNode) remove(numericIP, i uint32, subnetBits int, current *treeN
 	if d := this.remove(numericIP, i+1, subnetBits, child); d == true {
 
 		current.children[nextBit] = nil
-		if current.isAllowed == true || current.children[0] != nil || current.children[1] != nil {
+		if current.flagged == true || current.children[0] != nil || current.children[1] != nil {
 			return false
 		}
 		return true
